@@ -14,6 +14,7 @@ import (
 type App struct {
 	handler    *handler.Handler
 	configHTTP *config.ConfigHTTP
+	configDB   *config.ConfigDB
 }
 
 func New() *App {
@@ -22,16 +23,15 @@ func New() *App {
 	return &App{
 		handler:    h,
 		configHTTP: config.NewConfigHttp(),
+		configDB:   config.NewConfigDB(),
 	}
 }
 
 func (a *App) Run(ctx context.Context) {
 	ch := make(chan error, 1)
 
-	configHttp := config.NewConfigHttp()
-
 	server := http.Server{
-		Addr:    configHttp.Host + ":" + configHttp.Port,
+		Addr:    a.configHTTP.Host + ":" + a.configHTTP.Host,
 		Handler: a.handler.Router,
 	}
 
