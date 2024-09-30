@@ -13,3 +13,7 @@ func NewConfigHttp() *ConfigHTTP {
 		Port: os.Getenv("SERVICE_PORT"),
 	}
 }
+
+func (ch *ConfigHTTP) Addr() string {
+	return ch.Host + ":" + ch.Port
+}

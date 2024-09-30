@@ -1,11 +1,17 @@
-package usecase
+package useCaseClients
 
-type ClientService struct {
-	repo ClientRepository
+import "github.com/uxsnap/auto_repair/backend/internal/entity"
+
+type ClientsService struct {
+	repo ClientsRepository
 }
 
-func NewClientService(repo ClientRepository) *ClientService {
-	return &ClientService{
+func NewClientsService(repo ClientsRepository) *ClientsService {
+	return &ClientsService{
 		repo: repo,
 	}
+}
+
+func (cs *ClientsService) GetAllClients() ([]entity.Client, error) {
+	return cs.repo.GetAllClients()
 }

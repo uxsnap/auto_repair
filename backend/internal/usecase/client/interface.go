@@ -1,7 +1,7 @@
-package usecase
+package useCaseClients
 
 import "github.com/uxsnap/auto_repair/backend/internal/entity"
 
-type ClientRepository interface {
+type ClientsRepository interface {
 	GetAllClients() ([]entity.Client, error)
 }

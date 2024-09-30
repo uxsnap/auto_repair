@@ -6,15 +6,18 @@ import (
 
 type Handler struct {
 	Router         *chi.Mux
-	clientsService ClientService
+	clientsService ClientsService
 }
 
-func New() *Handler {
+func New(
+	clientsService ClientsService,
+) *Handler {
 	h := &Handler{
-		Router: NewRouter(),
+		Router:         NewRouter(),
+		clientsService: clientsService,
 	}
 
-	h.Router.Route("/client", h.ClientSubroutes)
+	h.Router.Route("/clients", h.ClientSubroutes)
 
 	return h
 }

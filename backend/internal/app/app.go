@@ -2,45 +2,53 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/uxsnap/auto_repair/backend/internal/config"
+	"github.com/uxsnap/auto_repair/backend/internal/db"
 	handler "github.com/uxsnap/auto_repair/backend/internal/delivery/http"
+	repoClients "github.com/uxsnap/auto_repair/backend/internal/repo/client"
+	useCaseClients "github.com/uxsnap/auto_repair/backend/internal/usecase/client"
 )
 
 type App struct {
-	handler    *handler.Handler
+	Handler    *handler.Handler
 	configHTTP *config.ConfigHTTP
 	configDB   *config.ConfigDB
+
+	db          *db.Client
+	repoClients *repoClients.ClientsRepository
+	ucClients   *useCaseClients.ClientsService
 }
 
 func New() *App {
-	h := handler.New()
-
 	return &App{
-		handler:    h,
 		configHTTP: config.NewConfigHttp(),
 		configDB:   config.NewConfigDB(),
 	}
 }
 
 func (a *App) Run(ctx context.Context) {
+	a.Handler = handler.New(
+		a.ClientsService(ctx),
+	)
+
 	ch := make(chan error, 1)
 
 	server := http.Server{
-		Addr:    a.configHTTP.Host + ":" + a.configHTTP.Host,
-		Handler: a.handler.Router,
+		Addr:    a.configHTTP.Addr(),
+		Handler: a.Handler.Router,
 	}
 
 	go func() {
-		fmt.Printf("Server is listening on port %v \n", a.configHTTP.Port)
+		log.Printf("Server is listening on %v \n", a.configHTTP.Addr())
 
 		err := server.ListenAndServe()
 
 		if err != nil {
+			log.Printf("Error while starting server %v \n", err)
 			ch <- err
 		}
 
@@ -63,4 +71,6 @@ func (a *App) Run(ctx context.Context) {
 			}
 		}
 	}()
+
+	<-ctx.Done()
 }
