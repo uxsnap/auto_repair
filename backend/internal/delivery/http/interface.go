@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"context"
+
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
 )
 
 type ClientsService interface {
-	GetAllClients() ([]entity.Client, error)
+	GetAllClients(ctx context.Context) ([]entity.Client, error)
 }

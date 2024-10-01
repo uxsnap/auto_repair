@@ -17,9 +17,7 @@ func NewClientsService(repo ClientsRepository) *ClientsService {
 	}
 }
 
-func (cs *ClientsService) GetAllClients() ([]entity.Client, error) {
+func (cs *ClientsService) GetAllClients(ctx context.Context) ([]entity.Client, error) {
 	log.Println("calling GetAllClients usecase")
-	ctx := context.Background()
-
 	return cs.repo.GetAllClients(ctx)
 }
