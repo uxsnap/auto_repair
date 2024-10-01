@@ -1,13 +1,20 @@
 package repo
 
-import "github.com/uxsnap/auto_repair/backend/internal/db"
+import (
+	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/uxsnap/auto_repair/backend/internal/db"
+)
 
 type BasePgRepository struct {
-	dbc *db.Client
+	DB *db.Client
 }
 
 func NewBaseRepo(dbc *db.Client) *BasePgRepository {
 	return &BasePgRepository{
-		dbc: dbc,
+		DB: dbc,
 	}
+}
+
+func (bpr *BasePgRepository) GetDB() *pgxpool.Pool {
+	return bpr.DB.GetDb()
 }

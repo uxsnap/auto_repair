@@ -1,6 +1,11 @@
 package useCaseClients
 
-import "github.com/uxsnap/auto_repair/backend/internal/entity"
+import (
+	"context"
+	"log"
+
+	"github.com/uxsnap/auto_repair/backend/internal/entity"
+)
 
 type ClientsService struct {
 	repo ClientsRepository
@@ -13,5 +18,8 @@ func NewClientsService(repo ClientsRepository) *ClientsService {
 }
 
 func (cs *ClientsService) GetAllClients() ([]entity.Client, error) {
-	return cs.repo.GetAllClients()
+	log.Println("calling GetAllClients usecase")
+	ctx := context.Background()
+
+	return cs.repo.GetAllClients(ctx)
 }

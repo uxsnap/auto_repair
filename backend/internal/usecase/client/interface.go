@@ -1,7 +1,11 @@
 package useCaseClients
 
-import "github.com/uxsnap/auto_repair/backend/internal/entity"
+import (
+	"context"
+
+	"github.com/uxsnap/auto_repair/backend/internal/entity"
+)
 
 type ClientsRepository interface {
-	GetAllClients() ([]entity.Client, error)
+	GetAllClients(ctx context.Context) ([]entity.Client, error)
 }
