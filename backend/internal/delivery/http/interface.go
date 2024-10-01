@@ -7,5 +7,6 @@ import (
 )
 
 type ClientsService interface {
-	GetAllClients(ctx context.Context) ([]entity.Client, error)
+	GetAll(ctx context.Context) ([]entity.Client, error)
+	Create(ctx context.Context, clientData entity.Client) error
 }

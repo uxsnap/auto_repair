@@ -42,6 +42,7 @@ func WriteErrorResponse(w http.ResponseWriter, status int, err error) {
 	w.WriteHeader(status)
 
 	encodeErr := json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+
 	if encodeErr != nil {
 		log.Printf("failed to encode error response")
 		w.Write([]byte(encodeErr.Error()))

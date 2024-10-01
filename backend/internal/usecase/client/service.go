@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/jackc/pgtype"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
 )
 
@@ -17,7 +18,22 @@ func NewClientsService(repo ClientsRepository) *ClientsService {
 	}
 }
 
-func (cs *ClientsService) GetAllClients(ctx context.Context) ([]entity.Client, error) {
-	log.Println("calling GetAllClients usecase")
-	return cs.repo.GetAllClients(ctx)
+func (cs *ClientsService) GetAll(ctx context.Context) ([]entity.Client, error) {
+	log.Println("clients: calling GetAll usecase")
+	return cs.repo.GetAll(ctx)
+}
+
+func (cs *ClientsService) Create(ctx context.Context, clientData entity.Client) error {
+	log.Println("clients: calling Create usecase")
+	return cs.repo.Create(ctx, clientData)
+}
+
+func (cs *ClientsService) Update(ctx context.Context, clientData entity.Client) error {
+	log.Println("clients: calling Update usecase")
+	return nil
+}
+
+func (cs *ClientsService) Delete(ctx context.Context, clientID pgtype.UUID) error {
+	log.Println("clients: calling Delete usecase")
+	return nil
 }
