@@ -22,15 +22,16 @@ func (h *Handler) getAllClients(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) createClient(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	clientData, ok := ctx.Value("client").(*entity.CreateClientBody)
+	var clientData entity.CreateClientBody
 
-	if !ok {
+	err := DecodeRequest(r, &clientData)
+
+	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse client data"))
 		return
 	}
 
-	err := h.clientsService.Create(ctx, clientData)
+	err = h.clientsService.Create(r.Context(), clientData)
 
 	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, err)

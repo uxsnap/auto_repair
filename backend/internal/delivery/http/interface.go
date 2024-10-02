@@ -8,5 +8,5 @@ import (
 
 type ClientsService interface {
 	GetAll(ctx context.Context) ([]entity.Client, error)
-	Create(ctx context.Context, clientData entity.Client) error
+	Create(ctx context.Context, clientData entity.CreateClientBody) error
 }

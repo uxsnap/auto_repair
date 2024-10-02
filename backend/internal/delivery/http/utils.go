@@ -14,7 +14,7 @@ type DataResponse struct {
 	Data interface{} `json:"data"`
 }
 
-func EncodeRequest(r *http.Request, dest interface{}) error {
+func DecodeRequest(r *http.Request, dest interface{}) error {
 	if err := json.NewDecoder(r.Body).Decode(dest); err != nil {
 		log.Printf("failed to decode request: %v", err)
 		return err
@@ -39,6 +39,8 @@ func WriteResponseJson(w http.ResponseWriter, resp interface{}) {
 }
 
 func WriteErrorResponse(w http.ResponseWriter, status int, err error) {
+	SetContentTypeApplicationJson(w)
+
 	w.WriteHeader(status)
 
 	encodeErr := json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})

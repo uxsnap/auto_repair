@@ -6,7 +6,6 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/georgysavva/scany/pgxscan"
-	uuid "github.com/google/uuid"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
 	"github.com/uxsnap/auto_repair/backend/internal/repo"
@@ -50,22 +49,23 @@ func (cr *ClientsRepository) Create(ctx context.Context, client entity.Client) e
 		Insert("clients").Columns(
 		"id",
 		"name",
-		"employeeId",
+		"employee_id",
 		"phone",
-		"hasDocuments",
+		"has_documents",
 		"passport",
-	).
-		Values(uuid.New(), client.Name, client.EmployeeId, client.Phone, client.HasDocuments, client.Passport).
+	).PlaceholderFormat(sq.Dollar).
+		Values(client.Id, client.Name, client.EmployeeId, client.Phone, client.HasDocuments, client.Passport).
 		ToSql()
 
 	if err != nil {
-		log.Println("clients: calling GetAll errored")
+		log.Println("clients: calling Create errored")
 		return err
 	}
 
-	cr.GetDB().Query(ctx, sql, args...)
-
-	log.Println("clients: calling GetAll errored")
+	if _, err = cr.GetDB().Exec(ctx, sql, args...); err != nil {
+		log.Println("clients: calling Create errored")
+		return err
+	}
 
 	return nil
 }
