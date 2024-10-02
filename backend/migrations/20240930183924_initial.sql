@@ -23,7 +23,8 @@ create table clients(
     name text not null,
     phone varchar(20) not null,
     has_documents boolean,
-    passport varchar(10) not null
+    passport varchar(10) not null,
+    is_deleted boolean
 );
 
 CREATE TABLE receipts(

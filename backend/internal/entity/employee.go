@@ -1,15 +1,12 @@
 package entity
 
-import (
-	"github.com/jackc/pgtype"
-)
+import "github.com/jackc/pgtype"
 
-type Client struct {
+type Employee struct {
 	Id           pgtype.UUID `json:"id"`
-	EmployeeId   pgtype.UUID `json:"employeeId"`
 	Name         string      `json:"name"`
-	Phone        string      `json:"phone"`
+	Position     string      `json:"position"`
 	HasDocuments bool        `json:"hasDocuments"`
-	Passport     string      `json:"passport"`
+	EmployeeNum  string      `json:"employeeNum"`
 	IsDeleted    bool        `json:"isDeleted"`
 }
