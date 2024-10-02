@@ -17,7 +17,7 @@ type EmployeeRepository struct {
 
 func NewEmployeeRepo(client *db.Client) *EmployeeRepository {
 	return &EmployeeRepository{
-		repo.NewBaseRepo(client),
+		repo.NewBaseRepo(client, "employee"),
 	}
 }
 

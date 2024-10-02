@@ -23,7 +23,12 @@ func NewClientsService(repo ClientsRepository) *ClientsService {
 
 func (cs *ClientsService) GetAll(ctx context.Context) ([]entity.Client, error) {
 	log.Println("clients: calling GetAll usecase")
-	return cs.repo.GetAll(ctx)
+
+	clients := []entity.Client{}
+
+	err := cs.repo.GetAll(ctx, entity.Client{}, clients)
+
+	return clients, err
 }
 
 func (cs *ClientsService) Create(ctx context.Context, clientData body.CreateClientBody) (uuid.UUID, error) {

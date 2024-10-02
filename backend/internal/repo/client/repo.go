@@ -2,11 +2,9 @@ package repoClients
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
@@ -19,32 +17,8 @@ type ClientsRepository struct {
 
 func NewClientsRepo(client *db.Client) *ClientsRepository {
 	return &ClientsRepository{
-		repo.NewBaseRepo(client),
+		repo.NewBaseRepo(client, "clients"),
 	}
-}
-
-func (cr *ClientsRepository) GetAll(ctx context.Context) ([]entity.Client, error) {
-	log.Println("clients: calling GetAll from repo")
-
-	sql, _, err := sq.Select("id, employee_id, name, phone, passport, has_documents, is_deleted").
-		From("clients").
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-
-	if err != nil {
-		log.Println("clients: calling GetAll errored")
-		return nil, err
-	}
-
-	var clients []entity.Client
-
-	pgxscan.Select(ctx, cr.GetDB(), &clients, sql)
-
-	log.Println("clients: returning from GetAll from repo")
-
-	fmt.Println(clients)
-
-	return clients, nil
 }
 
 func (cr *ClientsRepository) Create(ctx context.Context, client entity.Client) (uuid.UUID, error) {
