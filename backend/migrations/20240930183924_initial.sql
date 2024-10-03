@@ -31,8 +31,8 @@ CREATE TABLE receipts(
     id uuid PRIMARY KEY,
     contract_id uuid NOT NULL REFERENCES contracts(id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-
-    sum NUMERIC(10, 2) NOT NULL
+    sum NUMERIC(10, 2) NOT NULL,
+    is_deleted boolean
 );
 
 create table statuses(

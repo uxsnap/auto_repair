@@ -22,3 +22,10 @@ func (h *Handler) ContractSubroutes(r chi.Router) {
 	r.Post("/", h.createContract)
 	r.Patch("/{id}", h.updateContract)
 }
+
+func (h *Handler) ReceiptSubroutes(r chi.Router) {
+	r.Get("/", h.getAllReceipts)
+	r.Post("/", h.createReceipt)
+	r.Delete("/", h.deleteReceipt)
+	r.Patch("/{id}", h.updateReceipt)
+}

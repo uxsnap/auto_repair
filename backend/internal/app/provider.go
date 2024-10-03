@@ -88,3 +88,20 @@ func (a *App) ContractsService(ctx context.Context) *usecase.ContractsService {
 
 	return a.ucContracts
 }
+
+func (a *App) ReceiptsRepository(ctx context.Context) *repo.ReceiptsRepository {
+	if a.repoReceipts == nil {
+		a.repoReceipts = repo.NewReceiptsRepo(a.DbClient(ctx))
+	}
+	return a.repoReceipts
+}
+
+func (a *App) ReceiptsService(ctx context.Context) *usecase.ReceiptsService {
+	if a.ucReceipts == nil {
+		a.ucReceipts = usecase.NewReceiptsService(
+			a.ReceiptsRepository(ctx),
+		)
+	}
+
+	return a.ucReceipts
+}

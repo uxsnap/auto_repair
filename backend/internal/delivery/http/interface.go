@@ -15,6 +15,13 @@ type ClientsService interface {
 	Delete(ctx context.Context, ID uuid.UUID) (uuid.UUID, error)
 }
 
+type ReceiptsService interface {
+	GetAll(ctx context.Context) ([]entity.Receipt, error)
+	Create(ctx context.Context, clientData body.CreateReceiptBody) (uuid.UUID, error)
+	Update(ctx context.Context, ID uuid.UUID, clientData body.CreateReceiptBody) error
+	Delete(ctx context.Context, ID uuid.UUID) (uuid.UUID, error)
+}
+
 type EmployeesService interface {
 	GetAll(ctx context.Context) ([]entity.Employee, error)
 	Create(ctx context.Context, EmployeesData body.CreateEmployeeBody) (uuid.UUID, error)
