@@ -21,8 +21,11 @@ type App struct {
 	db            *db.Client
 	repoClients   *repo.ClientsRepository
 	repoEmployees *repo.EmployeesRepository
-	ucClients     *usecase.ClientsService
-	ucEmployees   *usecase.EmployeesService
+	repoContracts *repo.ContractsRepository
+
+	ucClients   *usecase.ClientsService
+	ucEmployees *usecase.EmployeesService
+	ucContracts *usecase.ContractsService
 }
 
 func New() *App {
@@ -36,6 +39,7 @@ func (a *App) Run(ctx context.Context) {
 	a.Handler = handler.New(
 		a.ClientsService(ctx),
 		a.EmployeesService(ctx),
+		a.ContractsService(ctx),
 	)
 
 	ch := make(chan error, 1)

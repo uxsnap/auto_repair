@@ -71,3 +71,20 @@ func (a *App) EmployeesService(ctx context.Context) *usecase.EmployeesService {
 
 	return a.ucEmployees
 }
+
+func (a *App) ContractsRepository(ctx context.Context) *repo.ContractsRepository {
+	if a.repoContracts == nil {
+		a.repoContracts = repo.NewContractsRepo(a.DbClient(ctx))
+	}
+	return a.repoContracts
+}
+
+func (a *App) ContractsService(ctx context.Context) *usecase.ContractsService {
+	if a.ucContracts == nil {
+		a.ucContracts = usecase.NewContractsService(
+			a.ContractsRepository(ctx),
+		)
+	}
+
+	return a.ucContracts
+}

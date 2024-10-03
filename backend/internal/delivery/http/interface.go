@@ -20,3 +20,9 @@ type EmployeesService interface {
 	Create(ctx context.Context, EmployeesData body.CreateEmployeeBody) (uuid.UUID, error)
 	Update(ctx context.Context, ID uuid.UUID, EmployeesData body.CreateEmployeeBody) error
 }
+
+type ContractsService interface {
+	GetAll(ctx context.Context) ([]entity.Contract, error)
+	Create(ctx context.Context, ContractsData body.CreateContractBody) (uuid.UUID, error)
+	Update(ctx context.Context, ID uuid.UUID, ContractsData body.CreateContractBody) error
+}
