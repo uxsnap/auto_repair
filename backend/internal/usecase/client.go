@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/uxsnap/auto_repair/backend/internal/body"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
+	"github.com/uxsnap/auto_repair/backend/internal/validators"
 )
 
 type ClientsRepository interface {
@@ -36,19 +37,19 @@ func (cs *ClientsService) GetAll(ctx context.Context) ([]entity.Client, error) {
 func (cs *ClientsService) Create(ctx context.Context, clientData body.CreateClientBody) (uuid.UUID, error) {
 	log.Println("clients: calling Create usecase")
 
-	if err := uuid.Validate(clientData.EmployeeId.String()); err != nil || clientData.EmployeeId == uuid.Nil {
+	if !validators.IsValidGuid(clientData.EmployeeId) {
 		return uuid.Nil, fmt.Errorf("employeeId должен быть UUID")
 	}
 
-	if len(clientData.Name) < 3 {
+	if !validators.IsValidLen(clientData.Name, 3) {
 		return uuid.Nil, fmt.Errorf("длина имени должна быть больше 3 символов")
 	}
 
-	if !IsValidPhoneNumber(clientData.Phone) {
+	if !validators.IsValidPhoneNumber(clientData.Phone) {
 		return uuid.Nil, fmt.Errorf("неверный формат номера")
 	}
 
-	if !IsValidPass(clientData.Passport) {
+	if !validators.IsValidPass(clientData.Passport) {
 		return uuid.Nil, fmt.Errorf("неверный формат паспорта")
 	}
 

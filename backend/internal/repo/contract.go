@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"log"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/georgysavva/scany/pgxscan"
@@ -55,7 +56,7 @@ func (cr *ContractsRepository) Create(ctx context.Context, client entity.Contrac
 		"signed_at",
 		"status_id",
 	).PlaceholderFormat(sq.Dollar).
-		Values(client.Id, client.Name, client.Sum, client.CreatedAt, nil, client.StatusId).
+		Values(client.Id, client.Name, client.Sum, time.Now(), nil, client.StatusId).
 		ToSql()
 
 	if err != nil {

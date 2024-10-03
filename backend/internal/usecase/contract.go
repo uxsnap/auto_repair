@@ -2,11 +2,13 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/google/uuid"
 	"github.com/uxsnap/auto_repair/backend/internal/body"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
+	"github.com/uxsnap/auto_repair/backend/internal/validators"
 )
 
 type ContractsRepository interface {
@@ -34,21 +36,17 @@ func (cs *ContractsService) GetAll(ctx context.Context) ([]entity.Contract, erro
 func (cs *ContractsService) Create(ctx context.Context, clientData body.CreateContractBody) (uuid.UUID, error) {
 	log.Println("Contracts: calling Create usecase")
 
-	// if err := uuid.Validate(clientData.EmployeeId.String()); err != nil || clientData.EmployeeId == uuid.Nil {
-	// 	return uuid.Nil, fmt.Errorf("employeeId должен быть UUID")
-	// }
+	if !validators.IsValidLen(clientData.Name, 3) {
+		return uuid.Nil, fmt.Errorf("длина имени должна быть больше 3 символов")
+	}
 
-	// if len(clientData.Name) < 3 {
-	// 	return uuid.Nil, fmt.Errorf("длина имени должна быть больше 3 символов")
-	// }
+	if !validators.IsValidSum(clientData.Sum) {
+		return uuid.Nil, fmt.Errorf("сумма должна быть больше 0")
+	}
 
-	// if !IsValidPhoneNumber(clientData.Phone) {
-	// 	return uuid.Nil, fmt.Errorf("неверный формат номера")
-	// }
-
-	// if !IsValidPass(clientData.Passport) {
-	// 	return uuid.Nil, fmt.Errorf("неверный формат паспорта")
-	// }
+	if !validators.IsValidGuid(clientData.StatusId) {
+		return uuid.Nil, fmt.Errorf("неккоректный statusId")
+	}
 
 	return cs.repo.Create(ctx, clientData.ToEntity())
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/uxsnap/auto_repair/backend/internal/body"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
+	"github.com/uxsnap/auto_repair/backend/internal/validators"
 )
 
 type EmployeesRepository interface {
@@ -35,15 +36,15 @@ func (cs *EmployeesService) GetAll(ctx context.Context) ([]entity.Employee, erro
 func (cs *EmployeesService) Create(ctx context.Context, clientData body.CreateEmployeeBody) (uuid.UUID, error) {
 	log.Println("Employees: calling Create usecase")
 
-	if len(clientData.Name) < 3 {
+	if !validators.IsValidLen(clientData.Name, 3) {
 		return uuid.Nil, fmt.Errorf("длина имени должна быть больше 3 символов")
 	}
 
-	if len(clientData.EmployeeNum) < 5 {
+	if !validators.IsValidLen(clientData.EmployeeNum, 5) {
 		return uuid.Nil, fmt.Errorf("неверный формат номера сотрудника")
 	}
 
-	if len(clientData.Position) < 5 {
+	if !validators.IsValidLen(clientData.Position, 5) {
 		return uuid.Nil, fmt.Errorf("неверный формат должности сотрудника")
 	}
 

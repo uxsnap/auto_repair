@@ -9,11 +9,10 @@ import (
 )
 
 type CreateContractBody struct {
-	Name      string
-	Sum       int
-	CreatedAt time.Time
-	SignedAt  time.Time
-	StatusId  uuid.UUID
+	Name     string
+	Sum      int
+	SignedAt time.Time
+	StatusId uuid.UUID
 }
 
 func (c *CreateContractBody) ToEntity() entity.Contract {
@@ -22,13 +21,10 @@ func (c *CreateContractBody) ToEntity() entity.Contract {
 			Bytes:  uuid.New(),
 			Status: pgtype.Present,
 		},
-		Sum: c.Sum,
+		Name: c.Name,
+		Sum:  c.Sum,
 		CreatedAt: pgtype.Timestamp{
-			Time:   c.CreatedAt,
-			Status: pgtype.Present,
-		},
-		SignedAt: pgtype.Timestamp{
-			Time:   c.CreatedAt,
+			Time:   time.Now(),
 			Status: pgtype.Present,
 		},
 		StatusId: pgtype.UUID{
