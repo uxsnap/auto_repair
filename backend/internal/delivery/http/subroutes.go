@@ -8,3 +8,9 @@ func (h *Handler) ClientSubroutes(r chi.Router) {
 	r.Delete("/", h.deleteClient)
 	r.Patch("/{id}", h.updateClient)
 }
+
+func (h *Handler) EmployeeSubroutes(r chi.Router) {
+	r.Get("/", h.getAllEmployees)
+	r.Post("/", h.createEmployee)
+	r.Patch("/{id}", h.updateEmployee)
+}

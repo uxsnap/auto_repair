@@ -9,8 +9,8 @@ import (
 	"github.com/uxsnap/auto_repair/backend/internal/config"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
 	handler "github.com/uxsnap/auto_repair/backend/internal/delivery/http"
-	repoClients "github.com/uxsnap/auto_repair/backend/internal/repo/client"
-	useCaseClients "github.com/uxsnap/auto_repair/backend/internal/usecase/client"
+	"github.com/uxsnap/auto_repair/backend/internal/repo"
+	"github.com/uxsnap/auto_repair/backend/internal/usecase"
 )
 
 type App struct {
@@ -18,9 +18,11 @@ type App struct {
 	configHTTP *config.ConfigHTTP
 	configDB   *config.ConfigDB
 
-	db          *db.Client
-	repoClients *repoClients.ClientsRepository
-	ucClients   *useCaseClients.ClientsService
+	db            *db.Client
+	repoClients   *repo.ClientsRepository
+	repoEmployees *repo.EmployeesRepository
+	ucClients     *usecase.ClientsService
+	ucEmployees   *usecase.EmployeesService
 }
 
 func New() *App {
@@ -33,6 +35,7 @@ func New() *App {
 func (a *App) Run(ctx context.Context) {
 	a.Handler = handler.New(
 		a.ClientsService(ctx),
+		a.EmployeesService(ctx),
 	)
 
 	ch := make(chan error, 1)

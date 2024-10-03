@@ -1,4 +1,4 @@
-package useCaseClients
+package usecase
 
 import (
 	"context"
@@ -8,8 +8,14 @@ import (
 	"github.com/google/uuid"
 	"github.com/uxsnap/auto_repair/backend/internal/body"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
-	"github.com/uxsnap/auto_repair/backend/internal/usecase"
 )
+
+type ClientsRepository interface {
+	GetAll(ctx context.Context) ([]entity.Client, error)
+	Create(ctx context.Context, client entity.Client) (uuid.UUID, error)
+	Delete(ctx context.Context, clientID string) (uuid.UUID, error)
+	Update(ctx context.Context, id uuid.UUID, client entity.Client) error
+}
 
 type ClientsService struct {
 	repo ClientsRepository
@@ -24,30 +30,26 @@ func NewClientsService(repo ClientsRepository) *ClientsService {
 func (cs *ClientsService) GetAll(ctx context.Context) ([]entity.Client, error) {
 	log.Println("clients: calling GetAll usecase")
 
-	clients := []entity.Client{}
-
-	err := cs.repo.GetAll(ctx, entity.Client{}, clients)
-
-	return clients, err
+	return cs.repo.GetAll(ctx)
 }
 
 func (cs *ClientsService) Create(ctx context.Context, clientData body.CreateClientBody) (uuid.UUID, error) {
 	log.Println("clients: calling Create usecase")
 
 	if err := uuid.Validate(clientData.EmployeeId.String()); err != nil || clientData.EmployeeId == uuid.Nil {
-		return uuid.Nil, fmt.Errorf("employeeId must be UUID")
+		return uuid.Nil, fmt.Errorf("employeeId должен быть UUID")
 	}
 
 	if len(clientData.Name) < 3 {
-		return uuid.Nil, fmt.Errorf("name must be the length of 3 min")
+		return uuid.Nil, fmt.Errorf("длина имени должна быть больше 3 символов")
 	}
 
-	if !usecase.IsValidPhoneNumber(clientData.Phone) {
-		return uuid.Nil, fmt.Errorf("phone is not valid")
+	if !IsValidPhoneNumber(clientData.Phone) {
+		return uuid.Nil, fmt.Errorf("неверный формат номера")
 	}
 
-	if !usecase.IsValidPass(clientData.Passport) {
-		return uuid.Nil, fmt.Errorf("passport is not valid")
+	if !IsValidPass(clientData.Passport) {
+		return uuid.Nil, fmt.Errorf("неверный формат паспорта")
 	}
 
 	return cs.repo.Create(ctx, clientData.ToEntity())

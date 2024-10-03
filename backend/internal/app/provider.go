@@ -6,8 +6,8 @@ import (
 
 	"github.com/uxsnap/auto_repair/backend/internal/config"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
-	repoClients "github.com/uxsnap/auto_repair/backend/internal/repo/client"
-	useCaseClients "github.com/uxsnap/auto_repair/backend/internal/usecase/client"
+	"github.com/uxsnap/auto_repair/backend/internal/repo"
+	"github.com/uxsnap/auto_repair/backend/internal/usecase"
 )
 
 func (a *App) GetConfigDB() *config.ConfigDB {
@@ -38,19 +38,36 @@ func (a *App) DbClient(ctx context.Context) *db.Client {
 	return a.db
 }
 
-func (a *App) ClientsRepository(ctx context.Context) *repoClients.ClientsRepository {
+func (a *App) ClientsRepository(ctx context.Context) *repo.ClientsRepository {
 	if a.repoClients == nil {
-		a.repoClients = repoClients.NewClientsRepo(a.DbClient(ctx))
+		a.repoClients = repo.NewClientsRepo(a.DbClient(ctx))
 	}
 	return a.repoClients
 }
 
-func (a *App) ClientsService(ctx context.Context) *useCaseClients.ClientsService {
+func (a *App) ClientsService(ctx context.Context) *usecase.ClientsService {
 	if a.ucClients == nil {
-		a.ucClients = useCaseClients.NewClientsService(
+		a.ucClients = usecase.NewClientsService(
 			a.ClientsRepository(ctx),
 		)
 	}
 
 	return a.ucClients
+}
+
+func (a *App) EmployeesRepository(ctx context.Context) *repo.EmployeesRepository {
+	if a.repoEmployees == nil {
+		a.repoEmployees = repo.NewEmployeesRepo(a.DbClient(ctx))
+	}
+	return a.repoEmployees
+}
+
+func (a *App) EmployeesService(ctx context.Context) *usecase.EmployeesService {
+	if a.ucEmployees == nil {
+		a.ucEmployees = usecase.NewEmployeesService(
+			a.EmployeesRepository(ctx),
+		)
+	}
+
+	return a.ucEmployees
 }

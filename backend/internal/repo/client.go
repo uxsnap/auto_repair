@@ -1,28 +1,50 @@
-package repoClients
+package repo
 
 import (
 	"context"
 	"log"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
-	"github.com/uxsnap/auto_repair/backend/internal/repo"
 )
 
 type ClientsRepository struct {
-	*repo.BasePgRepository
+	*BasePgRepository
 }
 
 func NewClientsRepo(client *db.Client) *ClientsRepository {
 	return &ClientsRepository{
-		repo.NewBaseRepo(client, "clients"),
+		NewBaseRepo(client, "clients"),
 	}
 }
 
+func (cr *ClientsRepository) GetAll(ctx context.Context) ([]entity.Client, error) {
+	log.Println(cr.Prefix + ": calling GetAll from repo")
+
+	sql, _, err := sq.Select("id, employee_id, name, phone, passport, has_documents, is_deleted").
+		From("clients").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+
+	if err != nil {
+		log.Println(cr.Prefix + ": calling GetAll errored")
+		return nil, err
+	}
+
+	var clients []entity.Client
+
+	pgxscan.Select(ctx, cr.GetDB(), &clients, sql)
+
+	log.Println(cr.Prefix + ": returning from GetAll from repo")
+
+	return clients, nil
+}
+
 func (cr *ClientsRepository) Create(ctx context.Context, client entity.Client) (uuid.UUID, error) {
-	log.Println("clients: calling Create from repo")
+	log.Println(cr.Prefix + ": calling Create from repo")
 
 	sql, args, err := sq.
 		Insert("clients").Columns(
@@ -38,12 +60,12 @@ func (cr *ClientsRepository) Create(ctx context.Context, client entity.Client) (
 		ToSql()
 
 	if err != nil {
-		log.Println("clients: calling Create errored")
+		log.Println(cr.Prefix + ": calling Create errored")
 		return uuid.Nil, err
 	}
 
 	if _, err = cr.GetDB().Exec(ctx, sql, args...); err != nil {
-		log.Println("clients: calling Create errored")
+		log.Println(cr.Prefix + ": calling Create errored")
 		return uuid.Nil, err
 	}
 
@@ -51,7 +73,7 @@ func (cr *ClientsRepository) Create(ctx context.Context, client entity.Client) (
 }
 
 func (cr *ClientsRepository) Delete(ctx context.Context, clientID string) (uuid.UUID, error) {
-	log.Println("clients: calling Create from repo")
+	log.Println(cr.Prefix + ": calling Create from repo")
 
 	sql, args, err := sq.
 		Update("clients").
@@ -61,12 +83,12 @@ func (cr *ClientsRepository) Delete(ctx context.Context, clientID string) (uuid.
 		ToSql()
 
 	if err != nil {
-		log.Println("clients: calling Create errored")
+		log.Println(cr.Prefix + ": calling Create errored")
 		return uuid.Nil, err
 	}
 
 	if _, err = cr.GetDB().Exec(ctx, sql, args...); err != nil {
-		log.Println("clients: calling Create errored")
+		log.Println(cr.Prefix + ": calling Create errored")
 		return uuid.Nil, err
 	}
 
@@ -74,7 +96,7 @@ func (cr *ClientsRepository) Delete(ctx context.Context, clientID string) (uuid.
 }
 
 func (cr *ClientsRepository) Update(ctx context.Context, id uuid.UUID, clientData entity.Client) error {
-	log.Println("clients: calling Update from repo")
+	log.Println(cr.Prefix + ": calling Update from repo")
 
 	sql, args, err := sq.
 		Update("clients").
@@ -90,14 +112,14 @@ func (cr *ClientsRepository) Update(ctx context.Context, id uuid.UUID, clientDat
 		ToSql()
 
 	if err != nil {
-		log.Println("clients: calling Update errored")
+		log.Println(cr.Prefix + ": calling Update errored")
 		return err
 	}
 
 	res, err := cr.GetDB().Exec(ctx, sql, args...)
 
 	if err != nil {
-		log.Println("clients: calling Update errored")
+		log.Println(cr.Prefix + ": calling Update errored")
 		return err
 	}
 
