@@ -27,6 +27,10 @@ func IsValidLen(name string, l int) bool {
 	return len(name) > l
 }
 
+func IsValidLenEq(val string, l int) bool {
+	return len(val) == l
+}
+
 func IsValidGuid(guid uuid.UUID) bool {
 	err := uuid.Validate(guid.String())
 	return err == nil && guid != uuid.Nil

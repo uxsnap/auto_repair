@@ -29,3 +29,9 @@ func (h *Handler) ReceiptSubroutes(r chi.Router) {
 	r.Delete("/", h.deleteReceipt)
 	r.Patch("/{id}", h.updateReceipt)
 }
+
+func (h *Handler) VehicleSubroutes(r chi.Router) {
+	r.Get("/", h.getAllVehicles)
+	r.Post("/", h.createVehicle)
+	r.Delete("/", h.deleteVehicle)
+}

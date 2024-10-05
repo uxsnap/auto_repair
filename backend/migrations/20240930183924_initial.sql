@@ -45,7 +45,8 @@ create table vehicles(
     client_id uuid NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
     vehicle_number varchar(10) not null,
     brand varchar(100) not null,
-    model varchar(100) not null
+    model varchar(100) not null,
+    is_deleted boolean
 );
 
 create table applications(

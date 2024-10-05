@@ -105,3 +105,20 @@ func (a *App) ReceiptsService(ctx context.Context) *usecase.ReceiptsService {
 
 	return a.ucReceipts
 }
+
+func (a *App) VehiclesRepository(ctx context.Context) *repo.VehiclesRepository {
+	if a.repoVehicles == nil {
+		a.repoVehicles = repo.NewVehiclesRepo(a.DbClient(ctx))
+	}
+	return a.repoVehicles
+}
+
+func (a *App) VehiclesService(ctx context.Context) *usecase.VehiclesService {
+	if a.ucVehicles == nil {
+		a.ucVehicles = usecase.NewVehiclesService(
+			a.VehiclesRepository(ctx),
+		)
+	}
+
+	return a.ucVehicles
+}
