@@ -34,7 +34,7 @@ func New(
 		receiptsService:  receiptsService,
 		vehiclesService:  vehiclesService,
 		actsService:      actsService,
-		storagesService: storagesService
+		storagesService:  storagesService,
 	}
 
 	h.Router.Route("/clients", h.ClientSubroutes)
@@ -44,6 +44,7 @@ func New(
 	h.Router.Route("/vehicles", h.VehicleSubroutes)
 	h.Router.Route("/applications", h.ApplicationSubroutes)
 	h.Router.Route("/acts", h.ActSubroutes)
+	h.Router.Route("/storages", h.StoragesSubroutes)
 
 	return h
 }
