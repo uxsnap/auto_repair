@@ -5,12 +5,13 @@ import (
 )
 
 type Handler struct {
-	Router           *chi.Mux
-	clientsService   ClientsService
-	employeesService EmployeesService
-	contractsService ContractsService
-	receiptsService  ReceiptsService
-	vehiclesService  VehiclesService
+	Router              *chi.Mux
+	clientsService      ClientsService
+	employeesService    EmployeesService
+	contractsService    ContractsService
+	receiptsService     ReceiptsService
+	vehiclesService     VehiclesService
+	applicationsService ApplicationsService
 }
 
 func New(
@@ -19,6 +20,7 @@ func New(
 	contractsService ContractsService,
 	receiptsService ReceiptsService,
 	vehiclesService VehiclesService,
+	applicationsService ApplicationsService,
 ) *Handler {
 	h := &Handler{
 		Router:           NewRouter(),
@@ -34,6 +36,7 @@ func New(
 	h.Router.Route("/contracts", h.ContractSubroutes)
 	h.Router.Route("/receipts", h.ReceiptSubroutes)
 	h.Router.Route("/vehicles", h.VehicleSubroutes)
+	h.Router.Route("/applications", h.ApplicationSubroutes)
 
 	return h
 }

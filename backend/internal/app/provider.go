@@ -122,3 +122,20 @@ func (a *App) VehiclesService(ctx context.Context) *usecase.VehiclesService {
 
 	return a.ucVehicles
 }
+
+func (a *App) ApplicationsRepository(ctx context.Context) *repo.ApplicationsRepository {
+	if a.repoApplications == nil {
+		a.repoApplications = repo.NewApplicationsRepo(a.DbClient(ctx))
+	}
+	return a.repoApplications
+}
+
+func (a *App) ApplicationsService(ctx context.Context) *usecase.ApplicationsService {
+	if a.ucApplications == nil {
+		a.ucApplications = usecase.NewApplicationsService(
+			a.ApplicationsRepository(ctx),
+		)
+	}
+
+	return a.ucApplications
+}

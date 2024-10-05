@@ -18,18 +18,20 @@ type App struct {
 	configHTTP *config.ConfigHTTP
 	configDB   *config.ConfigDB
 
-	db            *db.Client
-	repoClients   *repo.ClientsRepository
-	repoEmployees *repo.EmployeesRepository
-	repoContracts *repo.ContractsRepository
-	repoReceipts  *repo.ReceiptsRepository
-	repoVehicles  *repo.VehiclesRepository
+	db               *db.Client
+	repoClients      *repo.ClientsRepository
+	repoEmployees    *repo.EmployeesRepository
+	repoContracts    *repo.ContractsRepository
+	repoReceipts     *repo.ReceiptsRepository
+	repoVehicles     *repo.VehiclesRepository
+	repoApplications *repo.ApplicationsRepository
 
-	ucClients   *usecase.ClientsService
-	ucEmployees *usecase.EmployeesService
-	ucContracts *usecase.ContractsService
-	ucReceipts  *usecase.ReceiptsService
-	ucVehicles  *usecase.VehiclesService
+	ucClients      *usecase.ClientsService
+	ucEmployees    *usecase.EmployeesService
+	ucContracts    *usecase.ContractsService
+	ucReceipts     *usecase.ReceiptsService
+	ucVehicles     *usecase.VehiclesService
+	ucApplications *usecase.ApplicationsService
 }
 
 func New() *App {
@@ -46,6 +48,7 @@ func (a *App) Run(ctx context.Context) {
 		a.ContractsService(ctx),
 		a.ReceiptsService(ctx),
 		a.VehiclesService(ctx),
+		a.ApplicationsService(ctx),
 	)
 
 	ch := make(chan error, 1)

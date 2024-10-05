@@ -11,20 +11,20 @@ import (
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
 )
 
-type VehiclesRepository struct {
+type ApplicationsRepository struct {
 	*BasePgRepository
 }
 
-func NewVehiclesRepo(client *db.Client) *VehiclesRepository {
-	return &VehiclesRepository{
-		NewBaseRepo(client, "vehicles"),
+func NewApplicationsRepo(client *db.Client) *ApplicationsRepository {
+	return &ApplicationsRepository{
+		NewBaseRepo(client, "applications"),
 	}
 }
 
-func (cr *VehiclesRepository) GetAll(ctx context.Context) ([]entity.Vehicle, error) {
+func (cr *ApplicationsRepository) GetAll(ctx context.Context) ([]entity.Application, error) {
 	log.Println(cr.Prefix + ": calling GetAll from repo")
 
-	sql, _, err := sq.Select("id, client_id, vehicle_number, brand, model, is_deleted").
+	sql, _, err := sq.Select("id,employee_id,client_id,created_at,name,status,contract_id").
 		From(cr.Prefix).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
@@ -34,27 +34,26 @@ func (cr *VehiclesRepository) GetAll(ctx context.Context) ([]entity.Vehicle, err
 		return nil, err
 	}
 
-	var Vehicles []entity.Vehicle
+	var Applications []entity.Application
 
-	pgxscan.Select(ctx, cr.GetDB(), &Vehicles, sql)
+	pgxscan.Select(ctx, cr.GetDB(), &Applications, sql)
 
 	log.Println(cr.Prefix + ": returning from GetAll from repo")
 
-	return Vehicles, nil
+	return Applications, nil
 }
 
-func (cr *VehiclesRepository) Create(ctx context.Context, client entity.Vehicle) (uuid.UUID, error) {
+func (cr *ApplicationsRepository) Create(ctx context.Context, client entity.Application) (uuid.UUID, error) {
 	log.Println(cr.Prefix + ": calling Create from repo")
 
 	sql, args, err := sq.
-		Insert(cr.Prefix).Columns(
+		Insert("Applications").Columns(
 		"id",
-		"client_id",
-		"brand",
-		"model",
-		"vehicle_number",
+		"employee_id",
+		"client_id", "created_at", "name", "status", "contract_id",
+		"is_deleted",
 	).PlaceholderFormat(sq.Dollar).
-		Values(client.Id, client.ClientId, client.Brand, client.Model, client.VehicleNumber).
+		Values(client.Id, client.EmployeeId, client.ClientId, client.CreatedAt, client.Name, client.Status, client.ContractId, false).
 		ToSql()
 
 	if err != nil {
@@ -70,7 +69,7 @@ func (cr *VehiclesRepository) Create(ctx context.Context, client entity.Vehicle)
 	return client.Id.Bytes, nil
 }
 
-func (cr *VehiclesRepository) Delete(ctx context.Context, clientID string) (uuid.UUID, error) {
+func (cr *ApplicationsRepository) Delete(ctx context.Context, clientID string) (uuid.UUID, error) {
 	log.Println(cr.Prefix + ": calling Create from repo")
 
 	sql, args, err := sq.

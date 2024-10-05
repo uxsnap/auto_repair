@@ -35,3 +35,9 @@ func (h *Handler) VehicleSubroutes(r chi.Router) {
 	r.Post("/", h.createVehicle)
 	r.Delete("/", h.deleteVehicle)
 }
+
+func (h *Handler) ApplicationSubroutes(r chi.Router) {
+	r.Get("/", h.getAllApplications)
+	r.Post("/", h.createApplication)
+	r.Delete("/", h.deleteApplication)
+}
