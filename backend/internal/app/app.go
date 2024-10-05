@@ -25,6 +25,7 @@ type App struct {
 	repoReceipts     *repo.ReceiptsRepository
 	repoVehicles     *repo.VehiclesRepository
 	repoApplications *repo.ApplicationsRepository
+	repoActs         *repo.ActsRepository
 
 	ucClients      *usecase.ClientsService
 	ucEmployees    *usecase.EmployeesService
@@ -32,6 +33,7 @@ type App struct {
 	ucReceipts     *usecase.ReceiptsService
 	ucVehicles     *usecase.VehiclesService
 	ucApplications *usecase.ApplicationsService
+	ucActs         *usecase.ActsService
 }
 
 func New() *App {
@@ -49,6 +51,7 @@ func (a *App) Run(ctx context.Context) {
 		a.ReceiptsService(ctx),
 		a.VehiclesService(ctx),
 		a.ApplicationsService(ctx),
+		a.ActsService(ctx),
 	)
 
 	ch := make(chan error, 1)

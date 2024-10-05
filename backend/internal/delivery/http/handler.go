@@ -12,6 +12,7 @@ type Handler struct {
 	receiptsService     ReceiptsService
 	vehiclesService     VehiclesService
 	applicationsService ApplicationsService
+	actsService         ActsService
 }
 
 func New(
@@ -21,6 +22,7 @@ func New(
 	receiptsService ReceiptsService,
 	vehiclesService VehiclesService,
 	applicationsService ApplicationsService,
+	actsService ActsService,
 ) *Handler {
 	h := &Handler{
 		Router:           NewRouter(),
@@ -29,6 +31,7 @@ func New(
 		contractsService: contractsService,
 		receiptsService:  receiptsService,
 		vehiclesService:  vehiclesService,
+		actsService:      actsService,
 	}
 
 	h.Router.Route("/clients", h.ClientSubroutes)
@@ -37,6 +40,7 @@ func New(
 	h.Router.Route("/receipts", h.ReceiptSubroutes)
 	h.Router.Route("/vehicles", h.VehicleSubroutes)
 	h.Router.Route("/applications", h.ApplicationSubroutes)
+	h.Router.Route("/acts", h.ActSubroutes)
 
 	return h
 }

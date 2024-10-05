@@ -56,7 +56,8 @@ create table applications(
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     name text not null,
     status varchar(100) not null,
-    contract_id uuid NOT NULL REFERENCES contracts(id)
+    contract_id uuid NOT NULL REFERENCES contracts(id),
+    is_deleted boolean
 );
 
 create table services(
@@ -69,7 +70,8 @@ create table acts(
     name text not null,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     application_id uuid NOT NULL REFERENCES applications(id),
-    service_id uuid  NOT NULL REFERENCES services(id)
+    service_id uuid  NOT NULL REFERENCES services(id),
+    is_deleted boolean
 );
 
 create table storages(

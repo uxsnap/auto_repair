@@ -41,3 +41,9 @@ func (h *Handler) ApplicationSubroutes(r chi.Router) {
 	r.Post("/", h.createApplication)
 	r.Delete("/", h.deleteApplication)
 }
+
+func (h *Handler) ActSubroutes(r chi.Router) {
+	r.Get("/", h.getAllActs)
+	r.Post("/", h.createAct)
+	r.Delete("/", h.deleteAct)
+}

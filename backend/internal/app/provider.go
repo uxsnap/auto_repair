@@ -139,3 +139,20 @@ func (a *App) ApplicationsService(ctx context.Context) *usecase.ApplicationsServ
 
 	return a.ucApplications
 }
+
+func (a *App) ActsRepository(ctx context.Context) *repo.ActsRepository {
+	if a.repoActs == nil {
+		a.repoActs = repo.NewActsRepo(a.DbClient(ctx))
+	}
+	return a.repoActs
+}
+
+func (a *App) ActsService(ctx context.Context) *usecase.ActsService {
+	if a.ucActs == nil {
+		a.ucActs = usecase.NewActsService(
+			a.ActsRepository(ctx),
+		)
+	}
+
+	return a.ucActs
+}
