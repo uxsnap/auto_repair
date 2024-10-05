@@ -156,3 +156,20 @@ func (a *App) ActsService(ctx context.Context) *usecase.ActsService {
 
 	return a.ucActs
 }
+
+func (a *App) StoragesRepository(ctx context.Context) *repo.StoragesRepository {
+	if a.repoStorages == nil {
+		a.repoStorages = repo.NewStoragesRepo(a.DbClient(ctx))
+	}
+	return a.repoStorages
+}
+
+func (a *App) StoragesService(ctx context.Context) *usecase.StoragesService {
+	if a.ucStorages == nil {
+		a.ucStorages = usecase.NewStoragesService(
+			a.StoragesRepository(ctx),
+		)
+	}
+
+	return a.ucStorages
+}

@@ -47,3 +47,8 @@ func (h *Handler) ActSubroutes(r chi.Router) {
 	r.Post("/", h.createAct)
 	r.Delete("/", h.deleteAct)
 }
+
+func (h *Handler) StoragesSubroutes(r chi.Router) {
+	r.Get("/", h.getAllStorages)
+	r.Post("/", h.createStorage)
+}
