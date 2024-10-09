@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) getAllApplications(w http.ResponseWriter, r *http.Request) {
-	Applications, err := h.applicationsService.GetAll(context.Background())
+	applications, err := h.applicationsService.GetAll(context.Background())
 
 	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, err)
@@ -18,7 +18,7 @@ func (h *Handler) getAllApplications(w http.ResponseWriter, r *http.Request) {
 	}
 
 	WriteResponseJson(w, DataResponse{
-		Data: Applications,
+		Data: applications,
 	})
 }
 

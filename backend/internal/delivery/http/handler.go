@@ -27,14 +27,15 @@ func New(
 	storagesService StoragesService,
 ) *Handler {
 	h := &Handler{
-		Router:           NewRouter(),
-		clientsService:   clientsService,
-		employeesService: employeesService,
-		contractsService: contractsService,
-		receiptsService:  receiptsService,
-		vehiclesService:  vehiclesService,
-		actsService:      actsService,
-		storagesService:  storagesService,
+		Router:              NewRouter(),
+		clientsService:      clientsService,
+		employeesService:    employeesService,
+		contractsService:    contractsService,
+		receiptsService:     receiptsService,
+		vehiclesService:     vehiclesService,
+		actsService:         actsService,
+		storagesService:     storagesService,
+		applicationsService: applicationsService,
 	}
 
 	h.Router.Route("/clients", h.ClientSubroutes)

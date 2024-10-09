@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect

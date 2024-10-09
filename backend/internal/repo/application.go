@@ -34,13 +34,13 @@ func (cr *ApplicationsRepository) GetAll(ctx context.Context) ([]entity.Applicat
 		return nil, err
 	}
 
-	var Applications []entity.Application
+	applications := []entity.Application{}
 
-	pgxscan.Select(ctx, cr.GetDB(), &Applications, sql)
+	pgxscan.Select(ctx, cr.GetDB(), &applications, sql)
 
 	log.Println(cr.Prefix + ": returning from GetAll from repo")
 
-	return Applications, nil
+	return applications, nil
 }
 
 func (cr *ApplicationsRepository) Create(ctx context.Context, client entity.Application) (uuid.UUID, error) {
