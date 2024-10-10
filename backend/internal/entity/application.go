@@ -6,11 +6,11 @@ import (
 
 type Application struct {
 	Id         pgtype.UUID      `json:"id"`
-	EmployeeId pgtype.UUID      `json:"employee_id"`
-	ClientId   pgtype.UUID      `json:"client_id"`
+	EmployeeId pgtype.UUID      `json:"employeeId"`
+	ClientId   pgtype.UUID      `json:"clientId"`
 	Name       string           `json:"name"`
-	CreatedAt  pgtype.Timestamp `json:"created_at"`
+	CreatedAt  pgtype.Timestamp `json:"createdAt"`
 	Status     string           `json:"status"`
-	ContractId pgtype.UUID      `json:"contract_id"`
-	IsDeleted  bool             `json:"is_deleted"`
+	ContractId pgtype.UUID      `json:"contractId"`
+	IsDeleted  bool             `json:"isDeleted"`
 }

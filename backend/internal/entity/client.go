@@ -6,10 +6,10 @@ import (
 
 type Client struct {
 	Id           pgtype.UUID `json:"id"`
-	EmployeeId   pgtype.UUID `json:"employeeId"`
+	EmployeeId   pgtype.UUID `json:"employee_id"`
 	Name         string      `json:"name"`
 	Phone        string      `json:"phone"`
-	HasDocuments bool        `json:"hasDocuments"`
+	HasDocuments bool        `json:"has_documents"`
 	Passport     string      `json:"passport"`
-	IsDeleted    bool        `json:"isDeleted"`
+	IsDeleted    bool        `json:"is_deleted"`
 }

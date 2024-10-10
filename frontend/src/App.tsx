@@ -10,8 +10,8 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom';
-import { AppShell, MantineProvider, Tabs, Title } from '@mantine/core';
-import { AppsPage } from './pages/Apps.page';
+import { AppShell, Button, Group, MantineProvider, Tabs, Title } from '@mantine/core';
+import { AppsPage } from './pages/Apps/Apps.page';
 import { theme } from './theme';
 
 const queryClient = new QueryClient();
@@ -40,8 +40,8 @@ function Root() {
             <Tabs
               defaultValue="/"
               onChange={(value) => navigate(`/${value === '/' ? '' : value}`)}
-              variant="outline"
               value={tabValue}
+              variant='outline'
             >
               <Tabs.List>
                 <Tabs.Tab value="/">Заявки</Tabs.Tab>
