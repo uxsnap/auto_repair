@@ -42,6 +42,12 @@ func (h *Handler) ApplicationSubroutes(r chi.Router) {
 	r.Delete("/", h.deleteApplication)
 }
 
+func (h *Handler) DetailsSubroutes(r chi.Router) {
+	r.Get("/", h.getAllDetails)
+	r.Post("/", h.createDetail)
+	r.Delete("/", h.deleteDetail)
+}
+
 func (h *Handler) ActSubroutes(r chi.Router) {
 	r.Get("/", h.getAllActs)
 	r.Post("/", h.createAct)
@@ -51,4 +57,5 @@ func (h *Handler) ActSubroutes(r chi.Router) {
 func (h *Handler) StoragesSubroutes(r chi.Router) {
 	r.Get("/", h.getAllStorages)
 	r.Post("/", h.createStorage)
+	r.Delete("/", h.deleteStorage)
 }

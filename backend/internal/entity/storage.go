@@ -6,7 +6,8 @@ import (
 
 type Storage struct {
 	Id         pgtype.UUID `json:"id"`
-	EmployeeId pgtype.UUID `json:"employee_id"`
-	StorageNum string      `json:"storage_num"`
-	IsDeleted  bool        `json:"is_deleted"`
+	EmployeeId pgtype.UUID `json:"employeeId"`
+	StorageNum string      `json:"storageNum"`
+	DetailId   pgtype.UUID `json:"detailId"`
+	IsDeleted  bool        `json:"isDeleted"`
 }

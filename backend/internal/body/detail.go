@@ -7,9 +7,16 @@ import (
 )
 
 type CreateDetailBody struct {
-	Name      string
-	StorageId uuid.UUID
-	Price     float64
+	Name  string
+	Price int
+	Type  string
+}
+
+type DetailBodyParams struct {
+	Name     string
+	MinPrice int
+	MaxPrice int
+	Type     string
 }
 
 func (c *CreateDetailBody) ToEntity() entity.Detail {
@@ -18,11 +25,8 @@ func (c *CreateDetailBody) ToEntity() entity.Detail {
 			Bytes:  uuid.New(),
 			Status: pgtype.Present,
 		},
-		Name: c.Name,
-		StorageId: pgtype.UUID{
-			Bytes:  c.StorageId,
-			Status: pgtype.Present,
-		},
+		Name:  c.Name,
 		Price: c.Price,
+		Type:  c.Type,
 	}
 }

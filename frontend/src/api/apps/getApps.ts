@@ -1,3 +1,4 @@
+import { Application } from '@/types';
 import client from '../client';
 
 export const getApps = () => {

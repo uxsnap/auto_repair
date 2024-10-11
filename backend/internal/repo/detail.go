@@ -2,56 +2,85 @@ package repo
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
+	"github.com/uxsnap/auto_repair/backend/internal/body"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
 )
 
-type StoragesRepository struct {
+type DetailsRepository struct {
 	*BasePgRepository
 }
 
-func NewStoragesRepo(client *db.Client) *StoragesRepository {
-	return &StoragesRepository{
-		NewBaseRepo(client, "storages"),
+func NewDetailsRepo(client *db.Client) *DetailsRepository {
+	return &DetailsRepository{
+		NewBaseRepo(client, "details"),
 	}
 }
 
-func (cr *StoragesRepository) GetAll(ctx context.Context) ([]entity.Storage, error) {
+func (cr *DetailsRepository) GetAll(ctx context.Context, params body.DetailBodyParams) ([]entity.Detail, error) {
 	log.Println(cr.Prefix + ": calling GetAll from repo")
 
-	sql, _, err := sq.Select("id,employee_id,storage_num").
+	preSql := sq.Select("id, name, price, type").
 		From(cr.Prefix).
 		PlaceholderFormat(sq.Dollar).
-		ToSql()
+		Where("is_deleted = false")
+
+	if params.Name != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(name)": strings.ToLower("%" + params.Name + "%")})
+	}
+
+	if params.MinPrice != 0 {
+		preSql = preSql.Where(sq.GtOrEq{"price": params.MinPrice})
+	}
+
+	if params.MaxPrice != 0 {
+		preSql = preSql.Where(sq.LtOrEq{"price": params.MaxPrice})
+	}
+
+	if params.Type != "" {
+		preSql = preSql.Where(sq.Eq{"price": params.Type})
+	}
+
+	sql, args, err := preSql.ToSql()
 
 	if err != nil {
 		log.Println(cr.Prefix + ": calling GetAll errored")
 		return nil, err
 	}
 
-	var Storages []entity.Storage
+	details := []entity.Detail{}
 
-	pgxscan.Select(ctx, cr.GetDB(), &Storages, sql)
+	pgxscan.Select(ctx, cr.GetDB(), &details, sql, args...)
+
+	fmt.Println(sql, args)
 
 	log.Println(cr.Prefix + ": returning from GetAll from repo")
 
-	return Storages, nil
+	return details, nil
 }
 
-func (cr *StoragesRepository) Create(ctx context.Context, client entity.Storage) (uuid.UUID, error) {
+func (cr *DetailsRepository) Create(ctx context.Context, client entity.Detail) (uuid.UUID, error) {
 	log.Println(cr.Prefix + ": calling Create from repo")
 
 	sql, args, err := sq.
-		Insert("Storages").Columns(
-		"id", "employee_id", "storage_num",
+		Insert(cr.Prefix).Columns(
+		"id",
+		"name",
+		"type",
+		"price",
+		"is_deleted",
 	).PlaceholderFormat(sq.Dollar).
-		Values(client.Id, client.EmployeeId, client.StorageNum).
+		Values(client.Id, client.Name, client.Type, client.Price, false).
 		ToSql()
+
+	fmt.Println(sql)
 
 	if err != nil {
 		log.Println(cr.Prefix + ": calling Create errored")
@@ -66,7 +95,7 @@ func (cr *StoragesRepository) Create(ctx context.Context, client entity.Storage)
 	return client.Id.Bytes, nil
 }
 
-func (cr *StoragesRepository) Delete(ctx context.Context, clientID string) (uuid.UUID, error) {
+func (cr *DetailsRepository) Delete(ctx context.Context, clientID string) (uuid.UUID, error) {
 	log.Println(cr.Prefix + ": calling Create from repo")
 
 	sql, args, err := sq.

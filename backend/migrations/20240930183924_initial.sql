@@ -74,18 +74,22 @@ create table acts(
     is_deleted boolean
 );
 
-create table storages(
-    id uuid PRIMARY KEY,
-    employee_id uuid NOT NULL REFERENCES employees(id),
-    storage_num int not null
-);
-
 create table details(
     id uuid PRIMARY KEY,
-    storage_id uuid NOT NULL REFERENCES storages(id),
+    type text not null,
     name text not null,
-    price numeric(10, 2) not null
+    price numeric(10, 2) not null,
+    is_deleted boolean
 );
+
+create table storages(
+    id uuid PRIMARY KEY,
+    storage_num int not null,
+    employee_id uuid NOT NULL REFERENCES employees(id),
+    detail_id uuid NOT NULL REFERENCES details(id),
+    is_deleted boolean
+);
+
 
 -- +goose Down
 -- SQL в этой секции будет выполнен для отката изменений

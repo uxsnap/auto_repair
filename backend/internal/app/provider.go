@@ -174,19 +174,19 @@ func (a *App) StoragesService(ctx context.Context) *usecase.StoragesService {
 	return a.ucStorages
 }
 
-// func (a *App) DetailsRepository(ctx context.Context) *repo.DetailsRepository {
-// 	if a.repoDetails == nil {
-// 		a.repoDetails = repo.NewDetailsRepo(a.DbClient(ctx))
-// 	}
-// 	return a.repoDetails
-// }
+func (a *App) DetailsRepository(ctx context.Context) *repo.DetailsRepository {
+	if a.repoDetails == nil {
+		a.repoDetails = repo.NewDetailsRepo(a.DbClient(ctx))
+	}
+	return a.repoDetails
+}
 
-// func (a *App) DetailsService(ctx context.Context) *usecase.DetailsService {
-// 	if a.ucDetails == nil {
-// 		a.ucDetails = usecase.NewDetailsService(
-// 			a.DetailsRepository(ctx),
-// 		)
-// 	}
+func (a *App) DetailsService(ctx context.Context) *usecase.DetailsService {
+	if a.ucDetails == nil {
+		a.ucDetails = usecase.NewDetailsService(
+			a.DetailsRepository(ctx),
+		)
+	}
 
-// 	return a.ucDetails
-// }
+	return a.ucDetails
+}

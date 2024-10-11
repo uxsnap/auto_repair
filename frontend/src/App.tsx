@@ -7,12 +7,16 @@ import {
   Route,
   RouterProvider,
   Routes,
+  useLocation,
   useNavigate,
-  useParams,
 } from 'react-router-dom';
-import { AppShell, Button, Group, MantineProvider, Tabs, Title } from '@mantine/core';
+import { AppShell, MantineProvider, Tabs, Title } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import { AppsPage } from './pages/Apps/Apps.page';
+import { DetailsPage } from './pages/Details/Details.page';
 import { theme } from './theme';
+
+import '@mantine/notifications/styles.css';
 
 const queryClient = new QueryClient();
 
@@ -20,10 +24,12 @@ const router = createBrowserRouter([{ path: '*', element: <Root /> }]);
 
 function Root() {
   const navigate = useNavigate();
-  const { tabValue } = useParams();
+  const location = useLocation();
 
   return (
     <MantineProvider theme={theme}>
+      <Notifications />
+
       <QueryClientProvider client={queryClient}>
         <AppShell header={{ height: 60 }} padding="md">
           <AppShell.Header
@@ -38,19 +44,21 @@ function Root() {
 
           <AppShell.Main>
             <Tabs
-              defaultValue="/"
-              onChange={(value) => navigate(`/${value === '/' ? '' : value}`)}
-              value={tabValue}
-              variant='outline'
+              defaultValue={location.pathname}
+              onChange={(value) => navigate(`${value === '/' ? '' : value}`)}
+              value={location.pathname}
+              variant="outline"
             >
               <Tabs.List>
                 <Tabs.Tab value="/">Заявки</Tabs.Tab>
-                <Tabs.Tab value="clients">Клиенты</Tabs.Tab>
+                <Tabs.Tab value="/clients">Клиенты</Tabs.Tab>
+                <Tabs.Tab value="/details">Детали</Tabs.Tab>
               </Tabs.List>
 
               <Routes>
-                <Route path="/" element={<AppsPage />} />
                 <Route path="/clients" element={<AppsPage />} />
+                <Route path="/details" element={<DetailsPage />} />
+                <Route path="/" element={<AppsPage />} />
               </Routes>
             </Tabs>
           </AppShell.Main>

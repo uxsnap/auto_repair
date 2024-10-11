@@ -5,8 +5,8 @@ import (
 )
 
 type Detail struct {
-	Id        pgtype.UUID `json:"id"`
-	StorageId pgtype.UUID `json:"storage_id"`
-	Name      string      `json:"name"`
-	Price     float64     `json:"price"`
+	Id    pgtype.UUID `json:"id"`
+	Name  string      `json:"name"`
+	Price int         `json:"price"`
+	Type  string      `json:"type"`
 }

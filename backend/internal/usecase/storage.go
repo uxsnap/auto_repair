@@ -14,6 +14,7 @@ import (
 type StoragesRepository interface {
 	GetAll(ctx context.Context) ([]entity.Storage, error)
 	Create(ctx context.Context, client entity.Storage) (uuid.UUID, error)
+	Delete(ctx context.Context, storageID string) (uuid.UUID, error)
 }
 
 type StoragesService struct {
@@ -44,4 +45,14 @@ func (cs *StoragesService) Create(ctx context.Context, clientData body.CreateSto
 	}
 
 	return cs.repo.Create(ctx, clientData.ToEntity())
+}
+
+func (cs *StoragesService) Delete(ctx context.Context, detailID uuid.UUID) (uuid.UUID, error) {
+	log.Println("Storage: calling Delete usecase")
+
+	if detailID == uuid.Nil {
+		return uuid.Nil, fmt.Errorf("id must be provided")
+	}
+
+	return cs.repo.Delete(ctx, detailID.String())
 }
