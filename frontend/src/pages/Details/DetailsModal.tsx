@@ -63,6 +63,7 @@ export const DetailsModal = ({ opened, close }: Props) => {
           />
 
           <NumberInput
+            withAsterisk
             label="Цена"
             placeholder="Введите цену"
             suffix="₽"
@@ -71,6 +72,7 @@ export const DetailsModal = ({ opened, close }: Props) => {
           />
 
           <Select
+            withAsterisk
             label="Тип"
             placeholder="Выберите тип"
             data={[

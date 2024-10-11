@@ -45,7 +45,7 @@ func (cr *DetailsRepository) GetAll(ctx context.Context, params body.DetailBodyP
 	}
 
 	if params.Type != "" {
-		preSql = preSql.Where(sq.Eq{"price": params.Type})
+		preSql = preSql.Where(sq.Eq{"type": params.Type})
 	}
 
 	sql, args, err := preSql.ToSql()

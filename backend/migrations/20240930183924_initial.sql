@@ -14,7 +14,8 @@ create table employees(
     id uuid PRIMARY KEY,
     name text not null,
     position varchar(100) not null,
-    employee_num varchar(20) not null
+    employee_num varchar(20) not null,
+    is_deleted boolean
 );
 
 create table clients(

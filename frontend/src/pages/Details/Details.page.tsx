@@ -19,7 +19,7 @@ export function DetailsPage() {
       <DetailsModal close={close} opened={opened} />
 
       <Stack mt={20} gap={12}>
-        <Group justify="space-between">
+        <Group align="flex-end" justify="space-between">
           <Filters />
 
           <Button onClick={open}>Добавить деталь</Button>

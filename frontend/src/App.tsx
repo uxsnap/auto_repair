@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 
-import { IconEngine } from '@tabler/icons-react';
+import { IconEngine, IconPlus, IconUserFilled } from '@tabler/icons-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   createBrowserRouter,
@@ -10,13 +10,17 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
-import { AppShell, MantineProvider, Tabs, Title } from '@mantine/core';
+import { AppShell, Group, MantineProvider, Tabs, Title } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { AppsPage } from './pages/Apps/Apps.page';
 import { DetailsPage } from './pages/Details/Details.page';
 import { theme } from './theme';
 
 import '@mantine/notifications/styles.css';
+
+import { useDisclosure } from '@mantine/hooks';
+import { AddEmployee } from './components/AddEmployee';
+import { EmployeeModal } from './components/EmployeeModal';
 
 const queryClient = new QueryClient();
 
@@ -26,20 +30,35 @@ function Root() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [openedEmployeeModal, { open: openEmployeeModal, close: closeEmployeeModal }] =
+    useDisclosure(false);
+  const [openedAddEmployee, { open: openAddEmployee, close: closeAddEmployee }] =
+    useDisclosure(false);
+
   return (
     <MantineProvider theme={theme}>
       <Notifications />
 
       <QueryClientProvider client={queryClient}>
+        <EmployeeModal opened={openedEmployeeModal} close={closeEmployeeModal} />
+        <AddEmployee opened={openedAddEmployee} close={closeAddEmployee} />
+
         <AppShell header={{ height: 60 }} padding="md">
           <AppShell.Header
             display="flex"
-            style={{ alignItems: 'center', gap: 12 }}
+            style={{ alignItems: 'center', justifyContent: 'space-between' }}
             px={20}
             c="blue"
           >
-            <IconEngine size={40} />
-            <Title order={3}>Auto Repair</Title>
+            <Group gap={12} align="center">
+              <IconEngine size={40} />
+              <Title order={3}>Auto Repair</Title>
+            </Group>
+
+            <Group gap={12} align="center">
+              <IconUserFilled size={40} style={{ cursor: 'pointer' }} onClick={openEmployeeModal} />
+              <IconPlus size={40} style={{ cursor: 'pointer' }} onClick={openAddEmployee} />
+            </Group>
           </AppShell.Header>
 
           <AppShell.Main>

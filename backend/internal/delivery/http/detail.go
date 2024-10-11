@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -42,6 +43,8 @@ func (h *Handler) getAllDetails(w http.ResponseWriter, r *http.Request) {
 	}
 
 	detailType := query.Get("type")
+
+	fmt.Println(detailType)
 
 	if detailType != "" {
 		params.Type = detailType

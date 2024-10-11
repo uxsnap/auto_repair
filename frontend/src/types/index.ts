@@ -13,7 +13,6 @@ export type Application = {
 };
 
 export type DetailsFilters = {
-  id: string;
   name: string;
   minPrice: number;
   maxPrice: number;
@@ -25,6 +24,13 @@ export type Detail = {
   name: string;
   price: number;
   type: string;
+};
+
+export type Employee = {
+  id: string;
+  name: string;
+  position: string;
+  employeeNum: string;
 };
 
 export type FilterValues<T> = Partial<Omit<T, 'id'>>;

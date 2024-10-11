@@ -24,7 +24,7 @@ func NewEmployeesRepo(client *db.Client) *EmployeesRepository {
 func (cr *EmployeesRepository) GetAll(ctx context.Context) ([]entity.Employee, error) {
 	log.Println(cr.Prefix + ": calling GetAll from repo")
 
-	EmployeeSql := sq.Select("*").From("employees")
+	EmployeeSql := sq.Select("id,name,position,employee_num").From("employees").Where("is_deleted = false")
 
 	sql, _, err := EmployeeSql.ToSql()
 
@@ -51,8 +51,9 @@ func (cr *EmployeesRepository) Create(ctx context.Context, employee entity.Emplo
 		"name",
 		"position",
 		"employee_num",
+		"is_deleted",
 	).PlaceholderFormat(sq.Dollar).
-		Values(employee.Id, employee.Name, employee.Position, employee.EmployeeNum).
+		Values(employee.Id, employee.Name, employee.Position, employee.EmployeeNum, false).
 		ToSql()
 
 	if err != nil {
@@ -97,4 +98,27 @@ func (cr *EmployeesRepository) Update(ctx context.Context, id uuid.UUID, clientD
 	log.Printf("clients: updated %d rows", res.RowsAffected())
 
 	return nil
+}
+
+func (cr *EmployeesRepository) Delete(ctx context.Context, clientID string) (uuid.UUID, error) {
+	log.Println(cr.Prefix + ": calling Create from repo")
+
+	sql, args, err := sq.
+		Update(cr.Prefix).
+		Set("is_deleted", true).
+		Where(sq.Eq{"id": clientID}).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+
+	if err != nil {
+		log.Println(cr.Prefix + ": calling Create errored")
+		return uuid.Nil, err
+	}
+
+	if _, err = cr.GetDB().Exec(ctx, sql, args...); err != nil {
+		log.Println(cr.Prefix + ": calling Create errored")
+		return uuid.Nil, err
+	}
+
+	return uuid.MustParse(clientID), nil
 }

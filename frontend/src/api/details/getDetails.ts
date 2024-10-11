@@ -1,9 +1,9 @@
-import { Detail, FilterValues } from '@/types';
+import { Detail, DetailsFilters, FilterValues } from '@/types';
 import client from '../client';
 
-export const getDetails = (filters: FilterValues<Detail>) => {
+export const getDetails = (filters: FilterValues<DetailsFilters>) => {
   return client.get<Detail[]>('/details', {
-    params: filters
+    params: filters,
   });
 };
 
