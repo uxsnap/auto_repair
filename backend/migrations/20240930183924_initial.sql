@@ -85,9 +85,10 @@ create table details(
 
 create table storages(
     id uuid PRIMARY KEY,
-    storage_num int not null,
+    storage_num varchar(20) not null,
     employee_id uuid NOT NULL REFERENCES employees(id),
     detail_id uuid NOT NULL REFERENCES details(id),
+    detail_count int not null,
     is_deleted boolean
 );
 

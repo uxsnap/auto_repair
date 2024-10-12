@@ -7,9 +7,16 @@ import (
 )
 
 type CreateStorageBody struct {
-	EmployeeId uuid.UUID
-	DetailId   uuid.UUID
-	StorageNum string
+	EmployeeId  uuid.UUID
+	DetailId    uuid.UUID
+	StorageNum  string
+	DetailCount int
+}
+
+type StorageBodyParams struct {
+	StorageNum   string
+	DetailName   string
+	EmployeeName string
 }
 
 func (c *CreateStorageBody) ToEntity() entity.Storage {
@@ -27,5 +34,6 @@ func (c *CreateStorageBody) ToEntity() entity.Storage {
 			Bytes:  c.DetailId,
 			Status: pgtype.Present,
 		},
+		DetailCount: c.DetailCount,
 	}
 }

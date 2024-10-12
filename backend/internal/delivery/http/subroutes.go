@@ -59,4 +59,5 @@ func (h *Handler) StoragesSubroutes(r chi.Router) {
 	r.Get("/", h.getAllStorages)
 	r.Post("/", h.createStorage)
 	r.Delete("/", h.deleteStorage)
+	r.Patch("/{id}", h.updateStorage)
 }

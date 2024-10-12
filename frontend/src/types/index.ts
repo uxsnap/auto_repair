@@ -33,4 +33,33 @@ export type Employee = {
   employeeNum: string;
 };
 
+export type Storage = {
+  id: string;
+  employeeId: string;
+  storageNum: string;
+  detailId: string;
+  detailCount: number;
+};
+
+export type StorageWithData = {
+  id: string;
+  storageNum: string;
+  employee: {
+    id: string;
+    name: string;
+  };
+  detail: {
+    id: string;
+    name: string;
+  };
+  isDeleted: boolean;
+  detailCount: number;
+};
+
+export type StorageFilters = {
+  storageNum: string;
+  employeeName: string;
+  detailName: string;
+};
+
 export type FilterValues<T> = Partial<Omit<T, 'id'>>;

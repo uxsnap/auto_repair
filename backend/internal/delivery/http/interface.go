@@ -60,7 +60,8 @@ type ContractsService interface {
 }
 
 type StoragesService interface {
-	GetAll(ctx context.Context) ([]entity.Storage, error)
+	GetAll(ctx context.Context, params body.StorageBodyParams) ([]entity.StorageWithData, error)
 	Create(ctx context.Context, ContractsData body.CreateStorageBody) (uuid.UUID, error)
 	Delete(ctx context.Context, ID uuid.UUID) (uuid.UUID, error)
+	Update(ctx context.Context, ID uuid.UUID, clientData body.CreateStorageBody) error
 }

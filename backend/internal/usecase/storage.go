@@ -12,9 +12,10 @@ import (
 )
 
 type StoragesRepository interface {
-	GetAll(ctx context.Context) ([]entity.Storage, error)
+	GetAll(ctx context.Context, params body.StorageBodyParams) ([]entity.StorageWithData, error)
 	Create(ctx context.Context, client entity.Storage) (uuid.UUID, error)
 	Delete(ctx context.Context, storageID string) (uuid.UUID, error)
+	Update(ctx context.Context, id uuid.UUID, clientData body.CreateStorageBody) error
 }
 
 type StoragesService struct {
@@ -27,10 +28,10 @@ func NewStoragesService(repo StoragesRepository) *StoragesService {
 	}
 }
 
-func (cs *StoragesService) GetAll(ctx context.Context) ([]entity.Storage, error) {
+func (cs *StoragesService) GetAll(ctx context.Context, params body.StorageBodyParams) ([]entity.StorageWithData, error) {
 	log.Println("Storages: calling GetAll usecase")
 
-	return cs.repo.GetAll(ctx)
+	return cs.repo.GetAll(ctx, params)
 }
 
 func (cs *StoragesService) Create(ctx context.Context, clientData body.CreateStorageBody) (uuid.UUID, error) {
@@ -40,11 +41,33 @@ func (cs *StoragesService) Create(ctx context.Context, clientData body.CreateSto
 		return uuid.Nil, fmt.Errorf("ApplicationId должен быть UUID")
 	}
 
-	if !validators.IsValidLen(clientData.StorageNum, 10) {
-		return uuid.Nil, fmt.Errorf("длина имени должна быть больше 10 символов")
+	if !validators.IsValidLen(clientData.StorageNum, 3) {
+		return uuid.Nil, fmt.Errorf("длина номера должна быть больше 3 символов")
+	}
+
+	if !validators.IsValidSum(clientData.DetailCount) {
+		return uuid.Nil, fmt.Errorf("кол-во деталей не должно быть равно нулю")
 	}
 
 	return cs.repo.Create(ctx, clientData.ToEntity())
+}
+
+func (cs *StoragesService) Update(ctx context.Context, id uuid.UUID, clientData body.CreateStorageBody) error {
+	log.Println("Storages: calling Update usecase")
+
+	if !validators.IsValidGuid(clientData.EmployeeId) {
+		return fmt.Errorf("ApplicationId должен быть UUID")
+	}
+
+	if !validators.IsValidLen(clientData.StorageNum, 3) {
+		return fmt.Errorf("длина номера должна быть больше 3 символов")
+	}
+
+	if !validators.IsValidSum(clientData.DetailCount) {
+		return fmt.Errorf("кол-во деталей не должно быть равно нулю")
+	}
+
+	return cs.repo.Update(ctx, id, clientData)
 }
 
 func (cs *StoragesService) Delete(ctx context.Context, detailID uuid.UUID) (uuid.UUID, error) {

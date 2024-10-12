@@ -19,8 +19,6 @@ type Props = {
 export const AddEmployee = ({ edit, opened, close, employee }: Props) => {
   const queryClient = useQueryClient();
 
-  console.log(employee);
-
   const form = useForm({
     mode: 'uncontrolled',
     initialValues: {
