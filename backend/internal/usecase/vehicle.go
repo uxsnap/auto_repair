@@ -12,7 +12,7 @@ import (
 )
 
 type VehiclesRepository interface {
-	GetAll(ctx context.Context) ([]entity.Vehicle, error)
+	GetAll(ctx context.Context, params body.VehicleBodyParams) ([]entity.VehicleWithData, error)
 	Create(ctx context.Context, client entity.Vehicle) (uuid.UUID, error)
 	Delete(ctx context.Context, clientID string) (uuid.UUID, error)
 }
@@ -27,10 +27,10 @@ func NewVehiclesService(repo VehiclesRepository) *VehiclesService {
 	}
 }
 
-func (cs *VehiclesService) GetAll(ctx context.Context) ([]entity.Vehicle, error) {
+func (cs *VehiclesService) GetAll(ctx context.Context, params body.VehicleBodyParams) ([]entity.VehicleWithData, error) {
 	log.Println("Vehicles: calling GetAll usecase")
 
-	return cs.repo.GetAll(ctx)
+	return cs.repo.GetAll(ctx, params)
 }
 
 func (cs *VehiclesService) Create(ctx context.Context, clientData body.CreateVehicleBody) (uuid.UUID, error) {

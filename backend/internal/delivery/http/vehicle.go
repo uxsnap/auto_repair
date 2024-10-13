@@ -10,7 +10,29 @@ import (
 )
 
 func (h *Handler) getAllVehicles(w http.ResponseWriter, r *http.Request) {
-	vehicles, err := h.vehiclesService.GetAll(context.Background())
+	var params body.VehicleBodyParams
+
+	query := r.URL.Query()
+
+	vehicleNumber := query.Get("vehicleNumber")
+
+	if vehicleNumber != "" {
+		params.VehicleNumber = vehicleNumber
+	}
+
+	brand := query.Get("brand")
+
+	if brand != "" {
+		params.Brand = brand
+	}
+
+	model := query.Get("model")
+
+	if model != "" {
+		params.Model = model
+	}
+
+	vehicles, err := h.vehiclesService.GetAll(context.Background(), params)
 
 	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, err)
@@ -28,7 +50,7 @@ func (h *Handler) createVehicle(w http.ResponseWriter, r *http.Request) {
 	err := DecodeRequest(r, &vehicleData)
 
 	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse client data"))
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("недостаточно данных для ТС"))
 		return
 	}
 

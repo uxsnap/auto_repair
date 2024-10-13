@@ -90,4 +90,30 @@ export type ClientFilters = {
   phone: string;
 };
 
+export type VehiclesFilters = {
+  vehicleNumber: string;
+  clientName: string;
+  brand: string;
+  model: string;
+};
+
+export type Vehicle = {
+  id: string;
+  vehicleNumber: string;
+  clientId: string;
+  brand: string;
+  model: string;
+};
+
+export type VehicleWithData = {
+  id: string;
+  vehicleNumber: string;
+  client: {
+    id: string;
+    name: string;
+  };
+  brand: string;
+  model: string;
+};
+
 export type FilterValues<T> = Partial<Omit<T, 'id'>>;

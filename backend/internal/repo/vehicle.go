@@ -3,10 +3,11 @@ package repo
 import (
 	"context"
 	"log"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
+	"github.com/uxsnap/auto_repair/backend/internal/body"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
 )
@@ -21,26 +22,65 @@ func NewVehiclesRepo(client *db.Client) *VehiclesRepository {
 	}
 }
 
-func (cr *VehiclesRepository) GetAll(ctx context.Context) ([]entity.Vehicle, error) {
+func (cr *VehiclesRepository) GetAll(ctx context.Context, params body.VehicleBodyParams) ([]entity.VehicleWithData, error) {
 	log.Println(cr.Prefix + ": calling GetAll from repo")
 
-	sql, _, err := sq.Select("id, client_id, vehicle_number, brand, model, is_deleted").
-		From(cr.Prefix).
+	preSql := sq.Select("v.id, c.id, c.name, v.vehicle_number, v.brand, v.model").
+		From(cr.Prefix + " v").
 		PlaceholderFormat(sq.Dollar).
-		ToSql()
+		Join("clients c on c.id = v.client_id").
+		Where("v.is_deleted = false")
+
+	if params.VehicleNumber != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(v.vehicle_number)": strings.ToLower("%" + params.VehicleNumber + "%")})
+	}
+
+	if params.Brand != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(v.brand)": strings.ToLower("%" + params.Brand + "%")})
+	}
+
+	if params.Model != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(v.model)": strings.ToLower("%" + params.Model + "%")})
+	}
+
+	sql, args, err := preSql.ToSql()
 
 	if err != nil {
 		log.Println(cr.Prefix + ": calling GetAll errored")
 		return nil, err
 	}
 
-	var Vehicles []entity.Vehicle
+	vehicles := []entity.VehicleWithData{}
 
-	pgxscan.Select(ctx, cr.GetDB(), &Vehicles, sql)
+	rows, rowsErr := cr.GetDB().Query(ctx, sql, args...)
+
+	if rowsErr != nil {
+		return nil, rowsErr
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var vehicle entity.VehicleWithData
+
+		err := rows.Scan(
+			&vehicle.Id,
+			&vehicle.Client.Id,
+			&vehicle.Client.Name,
+			&vehicle.VehicleNumber,
+			&vehicle.Brand,
+			&vehicle.Model,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		vehicles = append(vehicles, vehicle)
+	}
 
 	log.Println(cr.Prefix + ": returning from GetAll from repo")
 
-	return Vehicles, nil
+	return vehicles, nil
 }
 
 func (cr *VehiclesRepository) Create(ctx context.Context, client entity.Vehicle) (uuid.UUID, error) {
@@ -53,8 +93,9 @@ func (cr *VehiclesRepository) Create(ctx context.Context, client entity.Vehicle)
 		"brand",
 		"model",
 		"vehicle_number",
+		"is_deleted",
 	).PlaceholderFormat(sq.Dollar).
-		Values(client.Id, client.ClientId, client.Brand, client.Model, client.VehicleNumber).
+		Values(client.Id, client.ClientId, client.Brand, client.Model, client.VehicleNumber, false).
 		ToSql()
 
 	if err != nil {

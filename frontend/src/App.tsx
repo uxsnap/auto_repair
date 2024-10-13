@@ -21,8 +21,9 @@ import '@mantine/notifications/styles.css';
 import { useDisclosure } from '@mantine/hooks';
 import { AddEmployee } from './components/AddEmployee';
 import { EmployeeModal } from './components/EmployeeModal';
-import { StoragePage } from './pages/Storage/Storage.page';
 import { ClientsPage } from './pages/Clients/Client.page';
+import { StoragePage } from './pages/Storage/Storage.page';
+import { VehiclesPage } from './pages/Vehicles/Vehicle.page';
 
 const queryClient = new QueryClient();
 
@@ -73,12 +74,14 @@ function Root() {
               <Tabs.List>
                 <Tabs.Tab value="/">Заявки</Tabs.Tab>
                 <Tabs.Tab value="/clients">Клиенты</Tabs.Tab>
+                <Tabs.Tab value="/vehicles">ТС</Tabs.Tab>
                 <Tabs.Tab value="/details">Детали</Tabs.Tab>
                 <Tabs.Tab value="/storage">Склад</Tabs.Tab>
               </Tabs.List>
 
               <Routes>
                 <Route path="/clients" element={<ClientsPage />} />
+                <Route path="/vehicles" element={<VehiclesPage />} />
                 <Route path="/details" element={<DetailsPage />} />
                 <Route path="/storage" element={<StoragePage />} />
                 <Route path="/" element={<AppsPage />} />

@@ -41,7 +41,7 @@ type ActsService interface {
 }
 
 type VehiclesService interface {
-	GetAll(ctx context.Context) ([]entity.Vehicle, error)
+	GetAll(ctx context.Context, params body.VehicleBodyParams) ([]entity.VehicleWithData, error)
 	Create(ctx context.Context, clientData body.CreateVehicleBody) (uuid.UUID, error)
 	Delete(ctx context.Context, ID uuid.UUID) (uuid.UUID, error)
 }

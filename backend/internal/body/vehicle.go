@@ -13,6 +13,12 @@ type CreateVehicleBody struct {
 	Model         string
 }
 
+type VehicleBodyParams struct {
+	VehicleNumber string
+	Brand         string
+	Model         string
+}
+
 func (c *CreateVehicleBody) ToEntity() entity.Vehicle {
 	return entity.Vehicle{
 		Id: pgtype.UUID{
@@ -23,7 +29,8 @@ func (c *CreateVehicleBody) ToEntity() entity.Vehicle {
 			Bytes:  c.ClientId,
 			Status: pgtype.Present,
 		},
-		Brand: c.Brand,
-		Model: c.Model,
+		Brand:         c.Brand,
+		Model:         c.Model,
+		VehicleNumber: c.VehicleNumber,
 	}
 }
