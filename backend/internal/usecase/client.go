@@ -12,7 +12,7 @@ import (
 )
 
 type ClientsRepository interface {
-	GetAll(ctx context.Context) ([]entity.Client, error)
+	GetAll(ctx context.Context, params body.ClientBodyParams) ([]entity.ClientWithData, error)
 	Create(ctx context.Context, client entity.Client) (uuid.UUID, error)
 	Delete(ctx context.Context, clientID string) (uuid.UUID, error)
 	Update(ctx context.Context, id uuid.UUID, client entity.Client) error
@@ -28,10 +28,10 @@ func NewClientsService(repo ClientsRepository) *ClientsService {
 	}
 }
 
-func (cs *ClientsService) GetAll(ctx context.Context) ([]entity.Client, error) {
+func (cs *ClientsService) GetAll(ctx context.Context, params body.ClientBodyParams) ([]entity.ClientWithData, error) {
 	log.Println("clients: calling GetAll usecase")
 
-	return cs.repo.GetAll(ctx)
+	return cs.repo.GetAll(ctx, params)
 }
 
 func (cs *ClientsService) Create(ctx context.Context, clientData body.CreateClientBody) (uuid.UUID, error) {

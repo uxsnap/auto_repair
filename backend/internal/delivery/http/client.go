@@ -11,7 +11,35 @@ import (
 )
 
 func (h *Handler) getAllClients(w http.ResponseWriter, r *http.Request) {
-	clients, err := h.clientsService.GetAll(context.Background())
+	var params body.ClientBodyParams
+
+	query := r.URL.Query()
+
+	name := query.Get("name")
+
+	if name != "" {
+		params.Name = name
+	}
+
+	employeeName := query.Get("employeeName")
+
+	if employeeName != "" {
+		params.EmployeeName = employeeName
+	}
+
+	phone := query.Get("phone")
+
+	if phone != "" {
+		params.Phone = phone
+	}
+
+	passport := query.Get("passport")
+
+	if passport != "" {
+		params.Passport = passport
+	}
+
+	clients, err := h.clientsService.GetAll(context.Background(), params)
 
 	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, err)

@@ -3,10 +3,11 @@ package repo
 import (
 	"context"
 	"log"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
+	"github.com/uxsnap/auto_repair/backend/internal/body"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
 )
@@ -21,22 +22,65 @@ func NewClientsRepo(client *db.Client) *ClientsRepository {
 	}
 }
 
-func (cr *ClientsRepository) GetAll(ctx context.Context) ([]entity.Client, error) {
+func (cr *ClientsRepository) GetAll(ctx context.Context, params body.ClientBodyParams) ([]entity.ClientWithData, error) {
 	log.Println(cr.Prefix + ": calling GetAll from repo")
 
-	sql, _, err := sq.Select("id, employee_id, name, phone, passport, has_documents, is_deleted").
-		From("clients").
+	preSql := sq.Select("c.id, c.name, e.id, e.name, c.phone, c.has_documents, c.passport").
+		From(cr.Prefix + " c").
 		PlaceholderFormat(sq.Dollar).
-		ToSql()
+		Join("employees e on e.id = employee_id").Where("c.is_deleted = false")
+
+	if params.Name != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(c.name)": strings.ToLower("%" + params.Name + "%")})
+	}
+
+	if params.EmployeeName != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(e.name)": strings.ToLower("%" + params.EmployeeName + "%")})
+	}
+
+	if params.Passport != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(c.passport)": strings.ToLower("%" + params.Passport + "%")})
+	}
+
+	if params.Phone != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(c.phone)": strings.ToLower("%" + params.Phone + "%")})
+	}
+
+	sql, args, err := preSql.ToSql()
 
 	if err != nil {
 		log.Println(cr.Prefix + ": calling GetAll errored")
 		return nil, err
 	}
 
-	var clients []entity.Client
+	clients := []entity.ClientWithData{}
 
-	pgxscan.Select(ctx, cr.GetDB(), &clients, sql)
+	rows, rowsErr := cr.GetDB().Query(ctx, sql, args...)
+
+	if rowsErr != nil {
+		return nil, rowsErr
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var client entity.ClientWithData
+
+		err := rows.Scan(
+			&client.Id,
+			&client.Name,
+			&client.Employee.Id,
+			&client.Employee.Name,
+			&client.Phone,
+			&client.HasDocuments,
+			&client.Passport,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		clients = append(clients, client)
+	}
 
 	log.Println(cr.Prefix + ": returning from GetAll from repo")
 

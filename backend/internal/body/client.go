@@ -14,6 +14,13 @@ type CreateClientBody struct {
 	Passport     string
 }
 
+type ClientBodyParams struct {
+	Name         string
+	Phone        string
+	Passport     string
+	EmployeeName string
+}
+
 func (c *CreateClientBody) ToEntity() entity.Client {
 	return entity.Client{
 		Id: pgtype.UUID{

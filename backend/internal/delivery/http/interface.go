@@ -9,7 +9,7 @@ import (
 )
 
 type ClientsService interface {
-	GetAll(ctx context.Context) ([]entity.Client, error)
+	GetAll(ctx context.Context, params body.ClientBodyParams) ([]entity.ClientWithData, error)
 	Create(ctx context.Context, clientData body.CreateClientBody) (uuid.UUID, error)
 	Update(ctx context.Context, ID uuid.UUID, clientData body.CreateClientBody) error
 	Delete(ctx context.Context, ID uuid.UUID) (uuid.UUID, error)

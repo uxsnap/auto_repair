@@ -41,6 +41,27 @@ export type Storage = {
   detailCount: number;
 };
 
+export type Client = {
+  id: string;
+  employeeId: string;
+  name: string;
+  phone: string;
+  passport: string;
+  hasDocuments: boolean;
+};
+
+export type ClientWithData = {
+  id: string;
+  employee: {
+    id: string;
+    name: string;
+  };
+  name: string;
+  phone: string;
+  passport: string;
+  hasDocuments: boolean;
+};
+
 export type StorageWithData = {
   id: string;
   storageNum: string;
@@ -60,6 +81,13 @@ export type StorageFilters = {
   storageNum: string;
   employeeName: string;
   detailName: string;
+};
+
+export type ClientFilters = {
+  name: string;
+  employeeName: string;
+  passport: string;
+  phone: string;
 };
 
 export type FilterValues<T> = Partial<Omit<T, 'id'>>;
