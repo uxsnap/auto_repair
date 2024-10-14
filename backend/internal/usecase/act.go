@@ -12,7 +12,7 @@ import (
 )
 
 type ActsRepository interface {
-	GetAll(ctx context.Context) ([]entity.Act, error)
+	GetAll(ctx context.Context, params body.ActBodyParams) ([]entity.ActWithData, error)
 	Create(ctx context.Context, client entity.Act) (uuid.UUID, error)
 	Delete(ctx context.Context, clientID string) (uuid.UUID, error)
 }
@@ -27,10 +27,10 @@ func NewActsService(repo ActsRepository) *ActsService {
 	}
 }
 
-func (cs *ActsService) GetAll(ctx context.Context) ([]entity.Act, error) {
+func (cs *ActsService) GetAll(ctx context.Context, params body.ActBodyParams) ([]entity.ActWithData, error) {
 	log.Println("Acts: calling GetAll usecase")
 
-	return cs.repo.GetAll(ctx)
+	return cs.repo.GetAll(ctx, params)
 }
 
 func (cs *ActsService) Create(ctx context.Context, clientData body.CreateActBody) (uuid.UUID, error) {

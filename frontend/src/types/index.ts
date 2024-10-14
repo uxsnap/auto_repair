@@ -97,6 +97,13 @@ export type VehiclesFilters = {
   model: string;
 };
 
+export type ActFilters = {
+  name: string;
+  applicationName: string;
+  serviceName: string;
+  createdAt: Date;
+};
+
 export type Vehicle = {
   id: string;
   vehicleNumber: string;
@@ -114,6 +121,33 @@ export type VehicleWithData = {
   };
   brand: string;
   model: string;
+};
+
+export type Act = {
+  id: string;
+  name: string;
+  createdAt: string;
+  applicationId: string;
+  serviceId: string;
+};
+
+export type ActWithData = {
+  id: string;
+  name: string;
+  createdAt: string;
+  application: {
+    id: string;
+    name: string;
+  };
+  service: {
+    id: string;
+    name: string;
+  };
+};
+
+export type Service = {
+  id: string;
+  name: string;
 };
 
 export type FilterValues<T> = Partial<Omit<T, 'id'>>;

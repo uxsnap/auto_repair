@@ -93,6 +93,11 @@ create table storages(
 );
 
 
+insert into services (id, name) values 
+(gen_random_uuid(), 'Починка двигателя'),
+(gen_random_uuid(), 'Замена подвески'),
+(gen_random_uuid(), 'Замена шин');
+
 -- +goose Down
 -- SQL в этой секции будет выполнен для отката изменений
 

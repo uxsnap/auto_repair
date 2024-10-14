@@ -15,6 +15,7 @@ type Handler struct {
 	actsService         ActsService
 	storagesService     StoragesService
 	detailsService      DetailsService
+	servicesService     ServicesService
 }
 
 func New(
@@ -27,6 +28,7 @@ func New(
 	actsService ActsService,
 	storagesService StoragesService,
 	detailsService DetailsService,
+	servicesService ServicesService,
 ) *Handler {
 	h := &Handler{
 		Router:              NewRouter(),
@@ -39,6 +41,7 @@ func New(
 		storagesService:     storagesService,
 		applicationsService: applicationsService,
 		detailsService:      detailsService,
+		servicesService:     servicesService,
 	}
 
 	h.Router.Route("/clients", h.ClientSubroutes)
@@ -50,6 +53,7 @@ func New(
 	h.Router.Route("/acts", h.ActSubroutes)
 	h.Router.Route("/storages", h.StoragesSubroutes)
 	h.Router.Route("/details", h.DetailsSubroutes)
+	h.Router.Route("/services", h.ServicesSubroutes)
 
 	return h
 }

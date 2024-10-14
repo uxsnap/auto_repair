@@ -61,3 +61,7 @@ func (h *Handler) StoragesSubroutes(r chi.Router) {
 	r.Delete("/", h.deleteStorage)
 	r.Patch("/{id}", h.updateStorage)
 }
+
+func (h *Handler) ServicesSubroutes(r chi.Router) {
+	r.Get("/", h.getAllServices)
+}

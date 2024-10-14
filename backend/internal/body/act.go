@@ -14,6 +14,12 @@ type CreateActBody struct {
 	ServiceId     uuid.UUID
 }
 
+type ActBodyParams struct {
+	Name            string
+	ApplicationName string
+	ServiceName     string
+}
+
 func (c *CreateActBody) ToEntity() entity.Act {
 	return entity.Act{
 		Id: pgtype.UUID{

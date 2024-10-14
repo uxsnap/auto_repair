@@ -3,10 +3,11 @@ package repo
 import (
 	"context"
 	"log"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
+	"github.com/uxsnap/auto_repair/backend/internal/body"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
 )
@@ -21,33 +22,74 @@ func NewActsRepo(client *db.Client) *ActsRepository {
 	}
 }
 
-func (cr *ActsRepository) GetAll(ctx context.Context) ([]entity.Act, error) {
+func (cr *ActsRepository) GetAll(ctx context.Context, params body.ActBodyParams) ([]entity.ActWithData, error) {
 	log.Println(cr.Prefix + ": calling GetAll from repo")
 
-	sql, _, err := sq.Select("id,name,application_id,created_at,service_id").
-		From(cr.Prefix).
+	preSql := sq.Select("act.id,act.name,a.id,a.name,act.created_at,s.id,s.name").
+		From(cr.Prefix + " act").
 		PlaceholderFormat(sq.Dollar).
-		ToSql()
+		Join("applications a on a.id = act.application_id").
+		Join("services s on s.id = act.service_id").
+		Where("act.is_deleted = false")
+
+	if params.Name != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(c.name)": strings.ToLower("%" + params.Name + "%")})
+	}
+
+	if params.ApplicationName != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(a.name)": strings.ToLower("%" + params.ApplicationName + "%")})
+	}
+
+	if params.ServiceName != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(s.name)": strings.ToLower("%" + params.ServiceName + "%")})
+	}
+
+	sql, args, err := preSql.ToSql()
 
 	if err != nil {
 		log.Println(cr.Prefix + ": calling GetAll errored")
 		return nil, err
 	}
 
-	var Acts []entity.Act
+	acts := []entity.ActWithData{}
 
-	pgxscan.Select(ctx, cr.GetDB(), &Acts, sql)
+	rows, rowsErr := cr.GetDB().Query(ctx, sql, args...)
+
+	if rowsErr != nil {
+		return nil, rowsErr
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var client entity.ActWithData
+
+		err := rows.Scan(
+			&client.Id,
+			&client.Name,
+			&client.Application.Id,
+			&client.Application.Name,
+			&client.CreatedAt,
+			&client.Service.Id,
+			&client.Service.Name,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		acts = append(acts, client)
+	}
 
 	log.Println(cr.Prefix + ": returning from GetAll from repo")
 
-	return Acts, nil
+	return acts, nil
 }
 
 func (cr *ActsRepository) Create(ctx context.Context, client entity.Act) (uuid.UUID, error) {
 	log.Println(cr.Prefix + ": calling Create from repo")
 
 	sql, args, err := sq.
-		Insert("Acts").Columns(
+		Insert(cr.Prefix).Columns(
 		"id", "name", "application_id", "created_at", "service_id", "is_deleted",
 	).PlaceholderFormat(sq.Dollar).
 		Values(client.Id, client.Name, client.ApplicationId, client.CreatedAt, client.ServiceId, false).

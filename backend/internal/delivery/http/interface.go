@@ -35,7 +35,7 @@ type DetailsService interface {
 }
 
 type ActsService interface {
-	GetAll(ctx context.Context) ([]entity.Act, error)
+	GetAll(ctx context.Context, params body.ActBodyParams) ([]entity.ActWithData, error)
 	Create(ctx context.Context, clientData body.CreateActBody) (uuid.UUID, error)
 	Delete(ctx context.Context, ID uuid.UUID) (uuid.UUID, error)
 }
@@ -64,4 +64,8 @@ type StoragesService interface {
 	Create(ctx context.Context, ContractsData body.CreateStorageBody) (uuid.UUID, error)
 	Delete(ctx context.Context, ID uuid.UUID) (uuid.UUID, error)
 	Update(ctx context.Context, ID uuid.UUID, clientData body.CreateStorageBody) error
+}
+
+type ServicesService interface {
+	GetAll(ctx context.Context) ([]entity.Service, error)
 }

@@ -10,7 +10,35 @@ import (
 )
 
 func (h *Handler) getAllActs(w http.ResponseWriter, r *http.Request) {
-	Act, err := h.actsService.GetAll(context.Background())
+	var params body.ActBodyParams
+
+	query := r.URL.Query()
+
+	name := query.Get("name")
+
+	if name != "" {
+		params.Name = name
+	}
+
+	employeeName := query.Get("applicationName")
+
+	if employeeName != "" {
+		params.ApplicationName = employeeName
+	}
+
+	phone := query.Get("phone")
+
+	if phone != "" {
+		params.ServiceName = phone
+	}
+
+	// passport := query.Get("serviceName")
+
+	// if passport != "" {
+	// 	params.Passport = passport
+	// }
+
+	Act, err := h.actsService.GetAll(context.Background(), params)
 
 	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, err)
