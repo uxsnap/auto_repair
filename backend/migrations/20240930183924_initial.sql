@@ -7,7 +7,8 @@ create table contracts(
     sum numeric(10, 2) not null,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     signed_at TIMESTAMP,
-    status_id uuid NOT NULL
+    status varchar(100) NOT NULL,
+    is_deleted boolean
 );
 
 create table employees(
@@ -34,11 +35,6 @@ CREATE TABLE receipts(
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     sum NUMERIC(10, 2) NOT NULL,
     is_deleted boolean
-);
-
-create table statuses(
-    id uuid PRIMARY KEY,
-    name varchar(100) not null
 );
 
 create table vehicles(
@@ -102,7 +98,6 @@ insert into services (id, name) values
 -- SQL в этой секции будет выполнен для отката изменений
 
 drop table if EXISTS receipts;
-drop table if EXISTS statuses;
 drop table if EXISTS vehicles;
 drop table if EXISTS contracts;
 drop table if EXISTS clients;

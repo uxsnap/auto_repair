@@ -2,7 +2,9 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/google/uuid"
@@ -11,7 +13,43 @@ import (
 )
 
 func (h *Handler) getAllContracts(w http.ResponseWriter, r *http.Request) {
-	contracts, err := h.contractsService.GetAll(context.Background())
+	var params body.ContractBodyParams
+
+	query := r.URL.Query()
+
+	name := query.Get("name")
+
+	if name != "" {
+		params.Name = name
+	}
+
+	minSum := query.Get("minSum")
+
+	if minSum != "" {
+		parsedSum, parseErr := strconv.Atoi(minSum)
+
+		if parseErr == nil {
+			params.MinSum = parsedSum
+		}
+	}
+
+	maxSum := query.Get("maxSum")
+
+	if maxSum != "" {
+		parsedSum, parseErr := strconv.Atoi(maxSum)
+
+		if parseErr == nil {
+			params.MaxSum = parsedSum
+		}
+	}
+
+	status := query.Get("status")
+
+	if status != "" {
+		params.Status = status
+	}
+
+	contracts, err := h.contractsService.GetAll(context.Background(), params)
 
 	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, err)
@@ -29,7 +67,7 @@ func (h *Handler) createContract(w http.ResponseWriter, r *http.Request) {
 	err := DecodeRequest(r, &contractData)
 
 	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse client data"))
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("невозможно распарсить тело запроса"))
 		return
 	}
 
@@ -55,11 +93,35 @@ func (h *Handler) updateContract(w http.ResponseWriter, r *http.Request) {
 	err := DecodeRequest(r, &contractData)
 
 	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse client data"))
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("невозможно распарсить тело запроса"))
 		return
 	}
 
+	fmt.Println(clientID, contractData)
+
 	err = h.contractsService.Update(r.Context(), clientID, contractData)
+
+	if err != nil {
+		WriteErrorResponse(w, http.StatusBadRequest, err)
+		return
+	}
+
+	WriteResponseJson(w, DataResponse{
+		Data: id,
+	})
+}
+
+func (h *Handler) deleteContract(w http.ResponseWriter, r *http.Request) {
+	var idBody body.IdBody
+
+	err := DecodeRequest(r, &idBody)
+
+	if err != nil {
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("невозможно распарсить тело запроса"))
+		return
+	}
+
+	id, err := h.contractsService.Delete(r.Context(), uuid.MustParse(idBody.Id))
 
 	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, err)

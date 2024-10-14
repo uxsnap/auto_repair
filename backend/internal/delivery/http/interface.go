@@ -55,9 +55,10 @@ type EmployeesService interface {
 }
 
 type ContractsService interface {
-	GetAll(ctx context.Context) ([]entity.Contract, error)
+	GetAll(ctx context.Context, params body.ContractBodyParams) ([]entity.Contract, error)
 	Create(ctx context.Context, ContractsData body.CreateContractBody) (uuid.UUID, error)
 	Update(ctx context.Context, ID uuid.UUID, ContractsData body.CreateContractBody) error
+	Delete(ctx context.Context, ID uuid.UUID) (uuid.UUID, error)
 }
 
 type StoragesService interface {

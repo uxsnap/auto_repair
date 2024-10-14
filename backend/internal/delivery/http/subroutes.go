@@ -21,6 +21,7 @@ func (h *Handler) EmployeeSubroutes(r chi.Router) {
 func (h *Handler) ContractSubroutes(r chi.Router) {
 	r.Get("/", h.getAllContracts)
 	r.Post("/", h.createContract)
+	r.Delete("/", h.deleteContract)
 	r.Patch("/{id}", h.updateContract)
 }
 

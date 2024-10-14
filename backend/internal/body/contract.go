@@ -11,8 +11,15 @@ import (
 type CreateContractBody struct {
 	Name     string
 	Sum      int
-	SignedAt time.Time
-	StatusId uuid.UUID
+	SignedAt string
+	Status   string
+}
+
+type ContractBodyParams struct {
+	Name   string
+	MinSum int
+	MaxSum int
+	Status string
 }
 
 func (c *CreateContractBody) ToEntity() entity.Contract {
@@ -27,9 +34,6 @@ func (c *CreateContractBody) ToEntity() entity.Contract {
 			Time:   time.Now(),
 			Status: pgtype.Present,
 		},
-		StatusId: pgtype.UUID{
-			Bytes:  c.StatusId,
-			Status: pgtype.Present,
-		},
+		Status: c.Status,
 	}
 }

@@ -8,7 +8,7 @@ type Contract struct {
 	Id        pgtype.UUID      `json:"id"`
 	Name      string           `json:"name"`
 	Sum       int              `json:"sum"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	SignedAt  pgtype.Timestamp `json:"signed_at"`
-	StatusId  pgtype.UUID      `json:"status_id"`
+	CreatedAt pgtype.Timestamp `json:"createdAt"`
+	SignedAt  pgtype.Timestamp `json:"signedAt"`
+	Status    string           `json:"status"`
 }

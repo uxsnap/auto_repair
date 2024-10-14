@@ -12,9 +12,10 @@ import (
 )
 
 type ContractsRepository interface {
-	GetAll(ctx context.Context) ([]entity.Contract, error)
+	GetAll(ctx context.Context, params body.ContractBodyParams) ([]entity.Contract, error)
 	Create(ctx context.Context, client entity.Contract) (uuid.UUID, error)
 	Update(ctx context.Context, id uuid.UUID, client entity.Contract) error
+	Delete(ctx context.Context, ID string) (uuid.UUID, error)
 }
 
 type ContractsService struct {
@@ -27,10 +28,10 @@ func NewContractsService(repo ContractsRepository) *ContractsService {
 	}
 }
 
-func (cs *ContractsService) GetAll(ctx context.Context) ([]entity.Contract, error) {
+func (cs *ContractsService) GetAll(ctx context.Context, params body.ContractBodyParams) ([]entity.Contract, error) {
 	log.Println("Contracts: calling GetAll usecase")
 
-	return cs.repo.GetAll(ctx)
+	return cs.repo.GetAll(ctx, params)
 }
 
 func (cs *ContractsService) Create(ctx context.Context, clientData body.CreateContractBody) (uuid.UUID, error) {
@@ -44,7 +45,7 @@ func (cs *ContractsService) Create(ctx context.Context, clientData body.CreateCo
 		return uuid.Nil, fmt.Errorf("сумма должна быть больше 0")
 	}
 
-	if !validators.IsValidGuid(clientData.StatusId) {
+	if !validators.IsValidLen(clientData.Status, 0) {
 		return uuid.Nil, fmt.Errorf("неккоректный statusId")
 	}
 
@@ -55,4 +56,14 @@ func (cs *ContractsService) Update(ctx context.Context, id uuid.UUID, clientData
 	log.Println("Contracts: calling Update usecase")
 
 	return cs.repo.Update(ctx, id, clientData.ToEntity())
+}
+
+func (cs *ContractsService) Delete(ctx context.Context, clientID uuid.UUID) (uuid.UUID, error) {
+	log.Println("contracts: calling Delete usecase")
+
+	if clientID == uuid.Nil {
+		return uuid.Nil, fmt.Errorf("id must be provided")
+	}
+
+	return cs.repo.Delete(ctx, clientID.String())
 }
