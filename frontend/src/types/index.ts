@@ -12,6 +12,25 @@ export type Application = {
   contractId: string;
 };
 
+export type ApplicationWithData = {
+  id: string;
+  employee: {
+    id: string;
+    name: string;
+  };
+  client: {
+    id: string;
+    name: string;
+  };
+  name: string;
+  createdAt: string;
+  status: string;
+  contract: {
+    id: string;
+    name: string;
+  };
+};
+
 export type DetailsFilters = {
   name: string;
   minPrice: number;
@@ -101,6 +120,15 @@ export type ActFilters = {
   name: string;
   applicationName: string;
   serviceName: string;
+  createdAt: Date;
+};
+
+export type ApplicationFilters = {
+  name: string;
+  employeeName: string;
+  clientName: string;
+  contractName: string;
+  status: string;
   createdAt: Date;
 };
 

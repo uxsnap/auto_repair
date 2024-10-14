@@ -41,6 +41,7 @@ func (h *Handler) ApplicationSubroutes(r chi.Router) {
 	r.Get("/", h.getAllApplications)
 	r.Post("/", h.createApplication)
 	r.Delete("/", h.deleteApplication)
+	r.Patch("/{id}", h.updateApplication)
 }
 
 func (h *Handler) DetailsSubroutes(r chi.Router) {

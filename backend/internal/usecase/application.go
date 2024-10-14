@@ -12,9 +12,10 @@ import (
 )
 
 type ApplicationsRepository interface {
-	GetAll(ctx context.Context) ([]entity.Application, error)
+	GetAll(ctx context.Context, params body.ApplicationBodyParams) ([]entity.ApplicationWithData, error)
 	Create(ctx context.Context, client entity.Application) (uuid.UUID, error)
 	Delete(ctx context.Context, clientID string) (uuid.UUID, error)
+	Update(ctx context.Context, ID uuid.UUID, clientData entity.Application) error
 }
 
 type ApplicationsService struct {
@@ -27,10 +28,10 @@ func NewApplicationsService(repo ApplicationsRepository) *ApplicationsService {
 	}
 }
 
-func (cs *ApplicationsService) GetAll(ctx context.Context) ([]entity.Application, error) {
+func (cs *ApplicationsService) GetAll(ctx context.Context, params body.ApplicationBodyParams) ([]entity.ApplicationWithData, error) {
 	log.Println("Applications: calling GetAll usecase")
 
-	return cs.repo.GetAll(ctx)
+	return cs.repo.GetAll(ctx, params)
 }
 
 func (cs *ApplicationsService) Create(ctx context.Context, clientData body.CreateApplicationBody) (uuid.UUID, error) {
@@ -67,4 +68,10 @@ func (cs *ApplicationsService) Delete(ctx context.Context, clientID uuid.UUID) (
 	}
 
 	return cs.repo.Delete(ctx, clientID.String())
+}
+
+func (cs *ApplicationsService) Update(ctx context.Context, id uuid.UUID, clientData body.CreateApplicationBody) error {
+	log.Println("Applications: calling Update usecase")
+
+	return cs.repo.Update(ctx, id, clientData.ToEntity())
 }

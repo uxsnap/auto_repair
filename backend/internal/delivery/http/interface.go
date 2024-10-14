@@ -23,9 +23,10 @@ type ReceiptsService interface {
 }
 
 type ApplicationsService interface {
-	GetAll(ctx context.Context) ([]entity.Application, error)
+	GetAll(ctx context.Context, params body.ApplicationBodyParams) ([]entity.ApplicationWithData, error)
 	Create(ctx context.Context, clientData body.CreateApplicationBody) (uuid.UUID, error)
 	Delete(ctx context.Context, ID uuid.UUID) (uuid.UUID, error)
+	Update(ctx context.Context, ID uuid.UUID, clientData body.CreateApplicationBody) error
 }
 
 type DetailsService interface {

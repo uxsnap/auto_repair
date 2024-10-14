@@ -3,10 +3,11 @@ package repo
 import (
 	"context"
 	"log"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
+	"github.com/uxsnap/auto_repair/backend/internal/body"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
 )
@@ -21,22 +22,76 @@ func NewApplicationsRepo(client *db.Client) *ApplicationsRepository {
 	}
 }
 
-func (cr *ApplicationsRepository) GetAll(ctx context.Context) ([]entity.Application, error) {
+func (cr *ApplicationsRepository) GetAll(ctx context.Context, params body.ApplicationBodyParams) ([]entity.ApplicationWithData, error) {
 	log.Println(cr.Prefix + ": calling GetAll from repo")
 
-	sql, _, err := sq.Select("id,employee_id,client_id,created_at,name,status,contract_id").
-		From(cr.Prefix).
+	preSql := sq.Select("apps.id,e.id, e.name, c.id, c.name, apps.name, apps.created_at,apps.status,con.id, con.name").
+		From(cr.Prefix + " apps").
 		PlaceholderFormat(sq.Dollar).
-		ToSql()
+		Join("employees e on e.id = apps.application_id").
+		Join("contracts con on con.id = apps.contract_id").
+		Where("is_deleted = false")
+
+	if params.Name != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(c.name)": strings.ToLower("%" + params.Name + "%")})
+	}
+
+	if params.EmployeeName != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(e.name)": strings.ToLower("%" + params.EmployeeName + "%")})
+	}
+
+	if params.ClientName != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(c.name)": strings.ToLower("%" + params.ClientName + "%")})
+	}
+
+	if params.ContractName != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(con.name)": strings.ToLower("%" + params.ContractName + "%")})
+	}
+
+	if params.Status != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(apps.status)": strings.ToLower("%" + params.Status + "%")})
+	}
+
+	sql, args, err := preSql.ToSql()
 
 	if err != nil {
 		log.Println(cr.Prefix + ": calling GetAll errored")
 		return nil, err
 	}
 
-	applications := []entity.Application{}
+	applications := []entity.ApplicationWithData{}
 
-	pgxscan.Select(ctx, cr.GetDB(), &applications, sql)
+	rows, rowsErr := cr.GetDB().Query(ctx, sql, args...)
+
+	if rowsErr != nil {
+		return nil, rowsErr
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var application entity.ApplicationWithData
+
+		// apps.id,e.id, e.name, c.id, c.name, apps.name, apps.created_at,apps.status,con.id, con.name
+
+		err := rows.Scan(
+			&application.Id,
+			&application.Employee.Id,
+			&application.Employee.Name,
+			&application.Client.Id,
+			&application.Client.Name,
+			&application.Name,
+			&application.CreatedAt,
+			&application.Status,
+			&application.Contract.Id,
+			&application.Contract.Name,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		applications = append(applications, application)
+	}
 
 	log.Println(cr.Prefix + ": returning from GetAll from repo")
 
@@ -90,4 +145,38 @@ func (cr *ApplicationsRepository) Delete(ctx context.Context, clientID string) (
 	}
 
 	return uuid.MustParse(clientID), nil
+}
+
+func (cr *ApplicationsRepository) Update(ctx context.Context, id uuid.UUID, clientData entity.Application) error {
+	log.Println(cr.Prefix + ": calling Update from repo")
+
+	sql, args, err := sq.
+		Update(cr.Prefix).
+		SetMap(map[string]interface{}{
+			"name":        clientData.Name,
+			"employee_id": clientData.EmployeeId,
+			"client_id":   clientData.ClientId,
+			"contract_id": clientData.ContractId,
+			"status":      clientData.Status,
+			"createdAt":   clientData.CreatedAt,
+		}).
+		Where(sq.Eq{"id": id}).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+
+	if err != nil {
+		log.Println(cr.Prefix + ": calling Update errored")
+		return err
+	}
+
+	res, err := cr.GetDB().Exec(ctx, sql, args...)
+
+	if err != nil {
+		log.Println(cr.Prefix + ": calling Update errored")
+		return err
+	}
+
+	log.Printf("clients: updated %d rows", res.RowsAffected())
+
+	return nil
 }

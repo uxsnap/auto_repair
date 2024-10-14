@@ -12,7 +12,6 @@ import {
 } from 'react-router-dom';
 import { AppShell, Group, MantineProvider, Tabs, Title } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
-import { AppsPage } from './pages/Apps/Apps.page';
 import { DetailsPage } from './pages/Details/Details.page';
 import { theme } from './theme';
 
@@ -26,6 +25,7 @@ import { ClientsPage } from './pages/Clients/Client.page';
 import { StoragePage } from './pages/Storage/Storage.page';
 import { VehiclesPage } from './pages/Vehicles/Vehicle.page';
 import { ActsPage } from './pages/Acts/Act.page';
+import { AppsPage } from './pages/Apps/Apps.page';
 
 const queryClient = new QueryClient();
 

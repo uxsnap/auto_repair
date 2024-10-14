@@ -17,6 +17,15 @@ type CreateApplicationBody struct {
 	ContractId uuid.UUID
 }
 
+type ApplicationBodyParams struct {
+	Name         string
+	ClientName   string
+	EmployeeName string
+	ContractName string
+	Status       string
+	// CreatedAt  time.Time
+}
+
 func (c *CreateApplicationBody) ToEntity() entity.Application {
 	return entity.Application{
 		Id: pgtype.UUID{

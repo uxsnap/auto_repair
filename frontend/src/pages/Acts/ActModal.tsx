@@ -6,10 +6,10 @@ import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { addAct } from '@/api/acts/addAct';
 import { getActs } from '@/api/acts/getActs';
-import { getApps } from '@/api/apps/getApps';
 import { getEmployees } from '@/api/employees/getEmployees';
 import { Act } from '@/types';
 import { getServices } from '@/api/services/getServices';
+import { getApps } from '@/api/apps/getApps';
 
 type Props = {
   opened: boolean;

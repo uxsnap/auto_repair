@@ -1,47 +1,40 @@
-import { useQuery } from '@tanstack/react-query';
-import { Button, Group, Stack, Table } from '@mantine/core';
-import { getApps } from '@/api/apps/getApps';
-import { Container } from '@/components/Container';
-import { Filters } from '@/pages/Apps/Filters';
+import { useState } from 'react';
+import { Button, Group, Stack } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { Application } from '@/types';
+import { Filters } from './Filters';
+import { AppModal } from './AppsModal';
+import { AppTable } from './Table';
 
 export function AppsPage() {
-  const { data, isFetching } = useQuery({ queryKey: [getApps.queryKey], queryFn: getApps });
+  const [opened, { open, close }] = useDisclosure(false);
 
-  const rows = (data?.data ?? []).map((element) => (
-    <Table.Tr key={element.name}>
-      <Table.Td>{element.id}</Table.Td>
-      <Table.Td>{element.name}</Table.Td>
-      <Table.Td>{element.clientId}</Table.Td>
-      <Table.Td>{element.createdAt}</Table.Td>
-      <Table.Td>{element.employeeId}</Table.Td>
-      <Table.Td>{element.status}</Table.Td>
-    </Table.Tr>
-  ));
+  const [curApp, setCurApp] = useState<Application>();
+
+  const handleChange = (App: Application) => {
+    setCurApp(App);
+    open();
+  };
 
   return (
-    <Container isFetching={isFetching}>
-      <Stack gap={20}>
-        <Group justify="space-between">
+    <>
+      <AppModal
+        onSubmit={() => setCurApp(undefined)}
+        close={close}
+        opened={opened}
+        app={curApp}
+        edit={!!curApp}
+      />
+
+      <Stack mt={20} gap={12}>
+        <Group align="flex-end" justify="space-between">
           <Filters />
 
-          <Button>Создать заявку</Button>
+          <Button onClick={open}>Добавить заявку</Button>
         </Group>
 
-        <Table stickyHeader withColumnBorders highlightOnHover>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>ID</Table.Th>
-              <Table.Th>Имя</Table.Th>
-              <Table.Th>Имя клиента</Table.Th>
-              <Table.Th>Дата создания</Table.Th>
-              <Table.Th>Закрепленный сотрудник</Table.Th>
-              <Table.Th>Статус</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
+        <AppTable onChange={handleChange} />
       </Stack>
-    </Container>
+    </>
   );
 }
