@@ -10,8 +10,13 @@ import (
 
 type CreateReceiptBody struct {
 	Sum        int
-	CreatedAt  time.Time
 	ContractId uuid.UUID
+}
+
+type ReceiptBodyParams struct {
+	ContractName string
+	MinSum       int
+	MaxSum       int
 }
 
 func (c *CreateReceiptBody) ToEntity() entity.Receipt {

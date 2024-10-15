@@ -12,10 +12,8 @@ import (
 )
 
 type ReceiptsRepository interface {
-	GetAll(ctx context.Context) ([]entity.Receipt, error)
+	GetAll(ctx context.Context, params body.ReceiptBodyParams) ([]entity.ReceiptWithData, error)
 	Create(ctx context.Context, Receipt entity.Receipt) (uuid.UUID, error)
-	Delete(ctx context.Context, ReceiptID string) (uuid.UUID, error)
-	Update(ctx context.Context, id uuid.UUID, Receipt entity.Receipt) error
 }
 
 type ReceiptsService struct {
@@ -28,10 +26,10 @@ func NewReceiptsService(repo ReceiptsRepository) *ReceiptsService {
 	}
 }
 
-func (cs *ReceiptsService) GetAll(ctx context.Context) ([]entity.Receipt, error) {
+func (cs *ReceiptsService) GetAll(ctx context.Context, params body.ReceiptBodyParams) ([]entity.ReceiptWithData, error) {
 	log.Println("Receipts: calling GetAll usecase")
 
-	return cs.repo.GetAll(ctx)
+	return cs.repo.GetAll(ctx, params)
 }
 
 func (cs *ReceiptsService) Create(ctx context.Context, clientData body.CreateReceiptBody) (uuid.UUID, error) {
@@ -46,20 +44,4 @@ func (cs *ReceiptsService) Create(ctx context.Context, clientData body.CreateRec
 	}
 
 	return cs.repo.Create(ctx, clientData.ToEntity())
-}
-
-func (cs *ReceiptsService) Update(ctx context.Context, id uuid.UUID, clientData body.CreateReceiptBody) error {
-	log.Println("Receipts: calling Update usecase")
-
-	return cs.repo.Update(ctx, id, clientData.ToEntity())
-}
-
-func (cs *ReceiptsService) Delete(ctx context.Context, id uuid.UUID) (uuid.UUID, error) {
-	log.Println("clients: calling Delete usecase")
-
-	if !validators.IsValidGuid(id) {
-		return uuid.Nil, fmt.Errorf("неккоректный id")
-	}
-
-	return cs.repo.Delete(ctx, id.String())
 }

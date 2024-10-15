@@ -3,11 +3,12 @@ package repo
 import (
 	"context"
 	"log"
+	"strings"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
+	"github.com/uxsnap/auto_repair/backend/internal/body"
 	"github.com/uxsnap/auto_repair/backend/internal/db"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
 )
@@ -22,26 +23,63 @@ func NewReceiptsRepo(client *db.Client) *ReceiptsRepository {
 	}
 }
 
-func (cr *ReceiptsRepository) GetAll(ctx context.Context) ([]entity.Receipt, error) {
+func (cr *ReceiptsRepository) GetAll(ctx context.Context, params body.ReceiptBodyParams) ([]entity.ReceiptWithData, error) {
 	log.Println(cr.Prefix + ": calling GetAll from repo")
 
-	sql, _, err := sq.Select("id,created_at,contract_id,sum").
-		From(cr.Prefix).
+	preSql := sq.Select("r.id,r.created_at,c.id,c.name,r.sum").
+		From(cr.Prefix + " r").
 		PlaceholderFormat(sq.Dollar).
-		ToSql()
+		Join("contracts c on c.id = r.contract_id")
+
+	if params.ContractName != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(c.name)": strings.ToLower("%" + params.ContractName + "%")})
+	}
+
+	if params.MinSum != 0 {
+		preSql = preSql.Where(sq.GtOrEq{"price": params.MinSum})
+	}
+
+	if params.MaxSum != 0 {
+		preSql = preSql.Where(sq.LtOrEq{"price": params.MaxSum})
+	}
+
+	sql, args, err := preSql.ToSql()
 
 	if err != nil {
 		log.Println(cr.Prefix + ": calling GetAll errored")
 		return nil, err
 	}
 
-	var Receipts []entity.Receipt
+	receipts := []entity.ReceiptWithData{}
 
-	pgxscan.Select(ctx, cr.GetDB(), &Receipts, sql)
+	rows, rowsErr := cr.GetDB().Query(ctx, sql, args...)
+
+	if rowsErr != nil {
+		return nil, rowsErr
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var receipt entity.ReceiptWithData
+
+		err := rows.Scan(
+			&receipt.Id,
+			&receipt.CreatedAt,
+			&receipt.Contract.Id,
+			&receipt.Contract.Name,
+			&receipt.Sum,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		receipts = append(receipts, receipt)
+	}
 
 	log.Println(cr.Prefix + ": returning from GetAll from repo")
 
-	return Receipts, nil
+	return receipts, nil
 }
 
 func (cr *ReceiptsRepository) Create(ctx context.Context, client entity.Receipt) (uuid.UUID, error) {
@@ -69,56 +107,4 @@ func (cr *ReceiptsRepository) Create(ctx context.Context, client entity.Receipt)
 	}
 
 	return client.Id.Bytes, nil
-}
-
-func (cr *ReceiptsRepository) Update(ctx context.Context, id uuid.UUID, clientData entity.Receipt) error {
-	log.Println(cr.Prefix + ": calling Update from repo")
-
-	sql, args, err := sq.
-		Update(cr.Prefix).
-		SetMap(map[string]interface{}{
-			"sum": clientData.Sum,
-		}).
-		Where(sq.Eq{"id": id}).
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-
-	if err != nil {
-		log.Println(cr.Prefix + ": calling Update errored")
-		return err
-	}
-
-	res, err := cr.GetDB().Exec(ctx, sql, args...)
-
-	if err != nil {
-		log.Println(cr.Prefix + ": calling Update errored")
-		return err
-	}
-
-	log.Printf("Receipts: updated %d rows", res.RowsAffected())
-
-	return nil
-}
-
-func (cr *ReceiptsRepository) Delete(ctx context.Context, id string) (uuid.UUID, error) {
-	log.Println(cr.Prefix + ": calling Create from repo")
-
-	sql, args, err := sq.
-		Update(cr.Prefix).
-		Set("is_deleted", true).
-		Where(sq.Eq{"id": id}).
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-
-	if err != nil {
-		log.Println(cr.Prefix + ": calling Create errored")
-		return uuid.Nil, err
-	}
-
-	if _, err = cr.GetDB().Exec(ctx, sql, args...); err != nil {
-		log.Println(cr.Prefix + ": calling Create errored")
-		return uuid.Nil, err
-	}
-
-	return uuid.MustParse(id), nil
 }

@@ -3,15 +3,44 @@ package handler
 import (
 	"context"
 	"net/http"
+	"strconv"
 
-	"github.com/go-chi/chi"
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/uxsnap/auto_repair/backend/internal/body"
 )
 
 func (h *Handler) getAllReceipts(w http.ResponseWriter, r *http.Request) {
-	Receipts, err := h.receiptsService.GetAll(context.Background())
+	var params body.ReceiptBodyParams
+
+	query := r.URL.Query()
+
+	contractName := query.Get("contractName")
+
+	if contractName != "" {
+		params.ContractName = contractName
+	}
+
+	minSum := query.Get("minSum")
+
+	if minSum != "" {
+		parsedSum, parseErr := strconv.Atoi(minSum)
+
+		if parseErr == nil {
+			params.MinSum = parsedSum
+		}
+	}
+
+	maxSum := query.Get("maxSum")
+
+	if maxSum != "" {
+		parsedSum, parseErr := strconv.Atoi(maxSum)
+
+		if parseErr == nil {
+			params.MaxSum = parsedSum
+		}
+	}
+
+	receipts, err := h.receiptsService.GetAll(context.Background(), params)
 
 	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, err)
@@ -19,7 +48,7 @@ func (h *Handler) getAllReceipts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	WriteResponseJson(w, DataResponse{
-		Data: Receipts,
+		Data: receipts,
 	})
 }
 
@@ -34,54 +63,6 @@ func (h *Handler) createReceipt(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id, err := h.receiptsService.Create(r.Context(), ReceiptData)
-
-	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
-	}
-
-	WriteResponseJson(w, DataResponse{
-		Data: id,
-	})
-}
-
-func (h *Handler) deleteReceipt(w http.ResponseWriter, r *http.Request) {
-	var idBody body.IdBody
-
-	err := DecodeRequest(r, &idBody)
-
-	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse id"))
-		return
-	}
-
-	id, err := h.receiptsService.Delete(r.Context(), uuid.MustParse(idBody.Id))
-
-	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
-	}
-
-	WriteResponseJson(w, DataResponse{
-		Data: id,
-	})
-}
-
-func (h *Handler) updateReceipt(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
-
-	ReceiptID := uuid.MustParse(id)
-
-	var ReceiptData body.CreateReceiptBody
-
-	err := DecodeRequest(r, &ReceiptData)
-
-	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse Receipt data"))
-		return
-	}
-
-	err = h.receiptsService.Update(r.Context(), ReceiptID, ReceiptData)
 
 	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, err)

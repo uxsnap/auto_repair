@@ -11,3 +11,10 @@ type Receipt struct {
 	Sum        int              `json:"sum"`
 	IsDeleted  bool             `json:"isDeleted"`
 }
+
+type ReceiptWithData struct {
+	Id        pgtype.UUID      `json:"id"`
+	Contract  IdWithName       `json:"contract"`
+	CreatedAt pgtype.Timestamp `json:"created_at"`
+	Sum       int              `json:"sum"`
+}

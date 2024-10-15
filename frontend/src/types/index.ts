@@ -132,6 +132,18 @@ export type ApplicationFilters = {
   createdAt: Date;
 };
 
+export type ContractsFilters = {
+  name: string;
+  minSum: number;
+  maxSum: number;
+  status: string;
+};
+
+export type ReceiptsFilters = {
+  minSum: number;
+  maxSum: number;
+};
+
 export type Vehicle = {
   id: string;
   vehicleNumber: string;
@@ -176,6 +188,44 @@ export type ActWithData = {
 export type Service = {
   id: string;
   name: string;
+};
+
+export type Contract = {
+  id: string;
+  name: string;
+  sum: number;
+  createdAt: {
+    InfinityModifier: number;
+    Status: number;
+    Time: string;
+  };
+  signedAt: {
+    InfinityModifier: number;
+    Status: number;
+    Time: string;
+  };
+  status: string;
+};
+
+export type Receipt = {
+  id: string;
+  contractId: string;
+  createdAt: string;
+  sum: number;
+};
+
+export type ReceiptWithData = {
+  id: string;
+  contract: {
+    id: string;
+    name: string;
+  };
+  createdAt: {
+    InfinityModifier: number;
+    Status: number;
+    Time: string;
+  };
+  sum: number;
 };
 
 export type FilterValues<T> = Partial<Omit<T, 'id'>>;

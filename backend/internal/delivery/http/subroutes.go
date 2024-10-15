@@ -28,8 +28,6 @@ func (h *Handler) ContractSubroutes(r chi.Router) {
 func (h *Handler) ReceiptSubroutes(r chi.Router) {
 	r.Get("/", h.getAllReceipts)
 	r.Post("/", h.createReceipt)
-	r.Delete("/", h.deleteReceipt)
-	r.Patch("/{id}", h.updateReceipt)
 }
 
 func (h *Handler) VehicleSubroutes(r chi.Router) {
