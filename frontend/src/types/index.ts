@@ -7,7 +7,11 @@ export type Application = {
   employeeId: string;
   clientId: string;
   name: string;
-  createdAt: string;
+  createdAt: {
+    InfinityModifier: number;
+    Status: number;
+    Time: string;
+  };
   status: string;
   contractId: string;
 };
@@ -23,7 +27,11 @@ export type ApplicationWithData = {
     name: string;
   };
   name: string;
-  createdAt: string;
+  createdAt: {
+    InfinityModifier: number;
+    Status: number;
+    Time: string;
+  };
   status: string;
   contract: {
     id: string;
@@ -137,11 +145,15 @@ export type ContractsFilters = {
   minSum: number;
   maxSum: number;
   status: string;
+  minCreatedAt: Date | null;
+  maxCreatedAt: Date | null;
 };
 
 export type ReceiptsFilters = {
   minSum: number;
   maxSum: number;
+  minCreatedAt: Date | null;
+  maxCreatedAt: Date | null;
 };
 
 export type Vehicle = {
@@ -166,7 +178,11 @@ export type VehicleWithData = {
 export type Act = {
   id: string;
   name: string;
-  createdAt: string;
+  createdAt: {
+    InfinityModifier: number;
+    Status: number;
+    Time: string;
+  };
   applicationId: string;
   serviceId: string;
 };
@@ -174,7 +190,11 @@ export type Act = {
 export type ActWithData = {
   id: string;
   name: string;
-  createdAt: string;
+  createdAt: {
+    InfinityModifier: number;
+    Status: number;
+    Time: string;
+  };
   application: {
     id: string;
     name: string;
@@ -210,7 +230,11 @@ export type Contract = {
 export type Receipt = {
   id: string;
   contractId: string;
-  createdAt: string;
+  createdAt: {
+    InfinityModifier: number;
+    Status: number;
+    Time: string;
+  };
   sum: number;
 };
 

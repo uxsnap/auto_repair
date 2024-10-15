@@ -26,7 +26,7 @@ export const ReceiptTable = ({}: Props) => {
       <Table.Td>{element.id}</Table.Td>
       <Table.Td>{element.contract.name}</Table.Td>
       <Table.Td>{element.sum}</Table.Td>
-      <Table.Td>{dayjs(element.createdAt.Time).format('DD/MM/YYYY')}</Table.Td>
+      <Table.Td>{dayjs(element.createdAt.Time).format('DD.MM.YYYY')}</Table.Td>
     </Table.Tr>
   ));
 

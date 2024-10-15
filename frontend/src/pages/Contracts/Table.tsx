@@ -47,8 +47,8 @@ export const ContractTable = ({ onChange }: Props) => {
       <Table.Td>{element.id}</Table.Td>
       <Table.Td>{element.name}</Table.Td>
       <Table.Td>{element.sum}</Table.Td>
-      <Table.Td>{ dayjs(element.createdAt.Time).format('DD/MM/YYYY')}</Table.Td>
-      <Table.Td>{element.signedAt.Status === 1 ? '' : dayjs(element.signedAt.Time).format('DD/MM/YYYY')}</Table.Td>
+      <Table.Td>{ dayjs(element.createdAt.Time).format('DD.MM.YYYY')}</Table.Td>
+      <Table.Td>{element.signedAt.Status === 1 ? '' : dayjs(element.signedAt.Time).format('DD.MM.YYYY')}</Table.Td>
       <Table.Td>{element.status}</Table.Td>
 
       <Table.Td>

@@ -63,7 +63,7 @@ func (h *Handler) createApplication(w http.ResponseWriter, r *http.Request) {
 	err := DecodeRequest(r, &ApplicationData)
 
 	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse Application data"))
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("нет данных"))
 		return
 	}
 
@@ -85,7 +85,7 @@ func (h *Handler) deleteApplication(w http.ResponseWriter, r *http.Request) {
 	err := DecodeRequest(r, &idBody)
 
 	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse id"))
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("нет данных"))
 		return
 	}
 
@@ -111,7 +111,7 @@ func (h *Handler) updateApplication(w http.ResponseWriter, r *http.Request) {
 	err := DecodeRequest(r, &ApplicationData)
 
 	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse Application data"))
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("нет данных"))
 		return
 	}
 

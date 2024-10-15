@@ -29,8 +29,8 @@ func (h *Handler) createEmployee(w http.ResponseWriter, r *http.Request) {
 
 	err := DecodeRequest(r, &EmployeeData)
 
-	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse Employee data"))
+	if err != nil || (EmployeeData == body.CreateEmployeeBody{}) {
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("нет данных"))
 		return
 	}
 

@@ -1,16 +1,7 @@
 import { useEffect } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import {
-  Button,
-  Checkbox,
-  Group,
-  Modal,
-  NumberInput,
-  Select,
-  Stack,
-  TextInput,
-} from '@mantine/core';
+import { Button, Group, Modal, NumberInput, Select, Stack, TextInput } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
@@ -18,6 +9,7 @@ import { addContract } from '@/api/contract/addContract';
 import { editContract } from '@/api/contract/editContract';
 import { getContracts } from '@/api/contract/getContacts';
 import { Contract } from '@/types';
+import { fromDateToString } from '@/utils';
 
 type Props = {
   opened: boolean;
@@ -30,14 +22,14 @@ type Props = {
 const getInitValues = (contract?: Contract) => ({
   name: contract?.name ?? '',
   sum: contract?.sum ?? 0,
-  signedAt: contract?.signedAt.Status === 1 ? '' : contract?.signedAt.Time,
+  signedAt: contract ? new Date(contract.signedAt.Time) : '',
   status: contract?.status ?? 'Новый',
 });
 
 export const ContractModal = ({ edit = false, opened, close, contract, onSubmit }: Props) => {
   const queryContract = useQueryClient();
 
-  console.log(contract);
+  console.log(getInitValues(contract));
 
   const form = useForm({
     mode: 'uncontrolled',
@@ -108,7 +100,7 @@ export const ContractModal = ({ edit = false, opened, close, contract, onSubmit 
     };
 
     if (values.signedAt) {
-      res.SignedAt = values.signedAt
+      res.SignedAt = fromDateToString(new Date(values.signedAt));
     }
 
     if (edit) {
@@ -148,6 +140,8 @@ export const ContractModal = ({ edit = false, opened, close, contract, onSubmit 
           <DateInput
             label="Дата подписания"
             placeholder="Выберите дату подписания"
+            valueFormat="DD.MM.YYYY"
+            lang="ru"
             key={form.key('signedAt')}
             {...form.getInputProps('signedAt')}
           />

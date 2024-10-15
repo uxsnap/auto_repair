@@ -1,28 +1,34 @@
 package body
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgtype"
 	"github.com/uxsnap/auto_repair/backend/internal/entity"
+	"github.com/uxsnap/auto_repair/backend/internal/utils"
 )
 
 type CreateContractBody struct {
 	Name     string
 	Sum      int
-	SignedAt string
+	SignedAt time.Time
 	Status   string
 }
 
 type ContractBodyParams struct {
-	Name   string
-	MinSum int
-	MaxSum int
-	Status string
+	Name         string
+	MinSum       int
+	MaxSum       int
+	Status       string
+	MinCreatedAt string
+	MaxCreatedAt string
 }
 
 func (c *CreateContractBody) ToEntity() entity.Contract {
+	fmt.Println(utils.TruncTime(c.SignedAt))
+
 	return entity.Contract{
 		Id: pgtype.UUID{
 			Bytes:  uuid.New(),
@@ -31,7 +37,11 @@ func (c *CreateContractBody) ToEntity() entity.Contract {
 		Name: c.Name,
 		Sum:  c.Sum,
 		CreatedAt: pgtype.Timestamp{
-			Time:   time.Now(),
+			Time:   utils.TruncTime(time.Now()),
+			Status: pgtype.Present,
+		},
+		SignedAt: pgtype.Timestamp{
+			Time:   utils.TruncTime(c.SignedAt),
 			Status: pgtype.Present,
 		},
 		Status: c.Status,

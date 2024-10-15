@@ -57,7 +57,7 @@ func (h *Handler) createClient(w http.ResponseWriter, r *http.Request) {
 	err := DecodeRequest(r, &clientData)
 
 	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse client data"))
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("нет данных"))
 		return
 	}
 
@@ -105,7 +105,7 @@ func (h *Handler) updateClient(w http.ResponseWriter, r *http.Request) {
 	err := DecodeRequest(r, &clientData)
 
 	if err != nil {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("cannot parse client data"))
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("нет данных"))
 		return
 	}
 

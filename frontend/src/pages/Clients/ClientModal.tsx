@@ -28,7 +28,7 @@ export const ClientModal = ({ edit = false, opened, close, client, onSubmit }: P
       employeeId: client?.employeeId ?? '',
       phone: client?.phone ?? '',
       passport: client?.passport ?? '',
-      hasDocuments: client?.hasDocuments ?? false,
+      hasDocuments: client?.hasDocuments ?? true,
     },
   });
 
@@ -117,7 +117,7 @@ export const ClientModal = ({ edit = false, opened, close, client, onSubmit }: P
   });
 
   return (
-    <Modal opened={opened} onClose={close} title={'Добавить деталь'} centered>
+    <Modal opened={opened} onClose={close} title={edit ? 'Редактировать клиента' : 'Добавить клиента'} centered>
       <form onSubmit={handleSubmit}>
         <Stack gap={12}>
           <TextInput

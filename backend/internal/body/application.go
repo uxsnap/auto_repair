@@ -11,7 +11,6 @@ import (
 type CreateApplicationBody struct {
 	EmployeeId uuid.UUID
 	ClientId   uuid.UUID
-	CreatedAt  time.Time
 	Name       string
 	Status     string
 	ContractId uuid.UUID

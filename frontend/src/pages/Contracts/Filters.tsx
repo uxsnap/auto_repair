@@ -1,4 +1,5 @@
 import { Group, NumberInput, Select, TextInput } from '@mantine/core';
+import { DateInput } from '@mantine/dates';
 import { useFiltersStore } from './store';
 
 export const Filters = () => {
@@ -8,7 +9,7 @@ export const Filters = () => {
   return (
     <Group gap={12}>
       <TextInput
-        onChange={(e) => onChange({ ...filters, name: e.target.value.trim() })}
+        onChange={(e) => onChange({ ...filters, name: e.target.value })}
         label="Имя клиента"
         placeholder="Введите номер склада"
         value={filters.name}
@@ -40,6 +41,24 @@ export const Filters = () => {
         placeholder="Выберите статус"
         data={['Новый', 'Действующий', 'Закрыт']}
         value={filters.status}
+      />
+
+      <DateInput
+        clearable
+        onChange={(v) => onChange({ ...filters, minCreatedAt: v })}
+        label="Минимальная дата создания"
+        placeholder="Выберите минимальная дату создания"
+        value={filters.minCreatedAt}
+        valueFormat="DD.MM.YYYY"
+      />
+
+      <DateInput
+        clearable
+        onChange={(v) => onChange({ ...filters, maxCreatedAt: v })}
+        label="Максимальная дата создания"
+        placeholder="Выберите максимальную дату создания"
+        value={filters.maxCreatedAt}
+        valueFormat="DD.MM.YYYY"
       />
     </Group>
   );

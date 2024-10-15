@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { IconEdit, IconX } from '@tabler/icons-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Table } from '@mantine/core';
@@ -30,8 +31,8 @@ export const AppTable = ({ onChange }: Props) => {
     onSuccess: () => {
       queryApp.invalidateQueries({ queryKey: [getApps.queryKey] });
       showNotification({
-        title: 'Клиент',
-        message: `Клиент был удален.`,
+        title: 'Заявка',
+        message: `Заявка была удалена.`,
       });
       close();
     },
@@ -60,7 +61,7 @@ export const AppTable = ({ onChange }: Props) => {
       <Table.Td>{element.employee.name}</Table.Td>
       <Table.Td>{element.client.name}</Table.Td>
       <Table.Td>{element.contract.name}</Table.Td>
-      <Table.Td>{element.createdAt}</Table.Td>
+      <Table.Td>{dayjs(element.createdAt.Time).format('DD.MM.YYYY')}</Table.Td>
       <Table.Td>{element.status}</Table.Td>
 
       <Table.Td>

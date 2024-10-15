@@ -10,6 +10,7 @@ import { getApps } from '@/api/apps/getApps';
 import { getEmployees } from '@/api/employees/getEmployees';
 import { Application } from '@/types';
 import { getClients } from '@/api/clients/getClients';
+import { getContracts } from '@/api/contract/getContacts';
 
 type Props = {
   opened: boolean;
@@ -61,6 +62,18 @@ export const AppModal = ({ edit = false, opened, close, app, onSubmit }: Props) 
       return data.data.map((clientsData) => ({
         value: clientsData.id,
         label: clientsData.name,
+      }));
+    },
+    staleTime: 5000,
+  });
+
+  const { data: contractsData } = useQuery({
+    queryKey: [getContracts.queryKey],
+    queryFn: () => getContracts(),
+    select(data) {
+      return data.data.map((contractsData) => ({
+        value: contractsData.id,
+        label: contractsData.name,
       }));
     },
     staleTime: 5000,
@@ -131,7 +144,7 @@ export const AppModal = ({ edit = false, opened, close, app, onSubmit }: Props) 
   });
 
   return (
-    <Modal opened={opened} onClose={close} title={'Добавить деталь'} centered>
+    <Modal opened={opened} onClose={close} title={edit ? 'Редактировать заявку' : 'Добавить заявку'} centered>
       <form onSubmit={handleSubmit}>
         <Stack gap={12}>
           <TextInput
@@ -160,14 +173,14 @@ export const AppModal = ({ edit = false, opened, close, app, onSubmit }: Props) 
             {...form.getInputProps('clientId')}
           />
 
-          {/* <Select
+          <Select
             withAsterisk
-            label="Контракт"
-            placeholder="Выберите контракт"
+            label="Договор"
+            placeholder="Выберите договор"
             data={contractsData}
             key={form.key('contractId')}
             {...form.getInputProps('contractId')}
-          /> */}
+          />
 
           <Select
             withAsterisk

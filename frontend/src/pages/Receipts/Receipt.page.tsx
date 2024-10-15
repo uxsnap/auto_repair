@@ -30,7 +30,7 @@ export function ReceiptsPage() {
         <Group align="flex-end" justify="space-between">
           <Filters />
 
-          <Button onClick={open}>Добавить договор</Button>
+          <Button onClick={open}>Добавить чек</Button>
         </Group>
 
         <ReceiptTable onChange={handleChange} />

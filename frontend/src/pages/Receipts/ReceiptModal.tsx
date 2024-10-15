@@ -75,6 +75,7 @@ export const ReceiptModal = ({ edit = false, opened, close, receipt, onSubmit }:
   const handleSubmit = form.onSubmit((values) => {
     const res: any = {
       Sum: values.sum,
+      ContractId: values.contractId,
     };
 
     addMutation.mutate(res);
@@ -96,7 +97,7 @@ export const ReceiptModal = ({ edit = false, opened, close, receipt, onSubmit }:
     <Modal
       opened={opened}
       onClose={close}
-      title={edit ? 'Редактировать договор' : 'Добавить договор'}
+      title={edit ? 'Редактировать чек' : 'Добавить чек'}
       centered
     >
       <form onSubmit={handleSubmit}>

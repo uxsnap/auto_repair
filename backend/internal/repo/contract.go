@@ -48,6 +48,14 @@ func (cr *ContractsRepository) GetAll(ctx context.Context, params body.ContractB
 		preSql = preSql.Where(sq.LtOrEq{"sum": params.MaxSum})
 	}
 
+	if params.MinCreatedAt != "" {
+		preSql = preSql.Where(sq.GtOrEq{"created_at": params.MinCreatedAt})
+	}
+
+	if params.MaxCreatedAt != "" {
+		preSql = preSql.Where(sq.LtOrEq{"created_at": params.MaxCreatedAt})
+	}
+
 	sql, args, err := preSql.ToSql()
 
 	if err != nil {
@@ -103,7 +111,7 @@ func (cr *ContractsRepository) Create(ctx context.Context, client entity.Contrac
 		"status",
 		"is_deleted",
 	).PlaceholderFormat(sq.Dollar).
-		Values(client.Id, client.Name, client.Sum, time.Now(), nil, client.Status, false).
+		Values(client.Id, client.Name, client.Sum, time.Now(), client.SignedAt.Time, client.Status, false).
 		ToSql()
 
 	if err != nil {

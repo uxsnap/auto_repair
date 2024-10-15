@@ -40,6 +40,18 @@ func (h *Handler) getAllReceipts(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	minCreatedAt := query.Get("minCreatedAt")
+
+	if minCreatedAt != "" {
+		params.MinCreatedAt = minCreatedAt
+	}
+
+	maxCreatedAt := query.Get("maxCreatedAt")
+
+	if maxCreatedAt != "" {
+		params.MaxCreatedAt = maxCreatedAt
+	}
+
 	receipts, err := h.receiptsService.GetAll(context.Background(), params)
 
 	if err != nil {

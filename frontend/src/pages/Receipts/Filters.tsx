@@ -1,5 +1,6 @@
 import { Group, NumberInput } from '@mantine/core';
 import { useFiltersStore } from './store';
+import { DateInput } from '@mantine/dates';
 
 export const Filters = () => {
   const filters = useFiltersStore((state) => state.filters);
@@ -25,6 +26,24 @@ export const Filters = () => {
         allowNegative={false}
         value={filters.maxSum}
         onValueChange={(v) => onChange({ ...filters, maxSum: v.floatValue })}
+      />
+
+      <DateInput
+        clearable
+        onChange={(v) => onChange({ ...filters, minCreatedAt: v })}
+        label="Минимальная дата создания"
+        placeholder="Выберите минимальная дату создания"
+        value={filters.minCreatedAt}
+        valueFormat="DD.MM.YYYY"
+      />
+
+      <DateInput
+        clearable
+        onChange={(v) => onChange({ ...filters, maxCreatedAt: v })}
+        label="Максимальная дата создания"
+        placeholder="Выберите максимальную дату создания"
+        value={filters.maxCreatedAt}
+        valueFormat="DD.MM.YYYY"
       />
     </Group>
   );

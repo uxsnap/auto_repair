@@ -17,7 +17,9 @@ import { theme } from './theme';
 
 import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css';
+import 'dayjs/locale/ru';
 
+import { DatesProvider } from '@mantine/dates';
 import { useDisclosure } from '@mantine/hooks';
 import { AddEmployee } from './components/AddEmployee';
 import { EmployeeModal } from './components/EmployeeModal';
@@ -46,60 +48,66 @@ function Root() {
     <MantineProvider theme={theme}>
       <Notifications />
 
-      <QueryClientProvider client={queryClient}>
-        <EmployeeModal opened={openedEmployeeModal} close={closeEmployeeModal} />
-        <AddEmployee opened={openedAddEmployee} close={closeAddEmployee} />
+      <DatesProvider settings={{ locale: 'ru' }}>
+        <QueryClientProvider client={queryClient}>
+          <EmployeeModal opened={openedEmployeeModal} close={closeEmployeeModal} />
+          <AddEmployee opened={openedAddEmployee} close={closeAddEmployee} />
 
-        <AppShell header={{ height: 60 }} padding="md">
-          <AppShell.Header
-            display="flex"
-            style={{ alignItems: 'center', justifyContent: 'space-between' }}
-            px={20}
-            c="blue"
-          >
-            <Group gap={12} align="center">
-              <IconEngine size={40} />
-              <Title order={3}>Auto Repair</Title>
-            </Group>
-
-            <Group gap={12} align="center">
-              <IconUserFilled size={40} style={{ cursor: 'pointer' }} onClick={openEmployeeModal} />
-              <IconPlus size={40} style={{ cursor: 'pointer' }} onClick={openAddEmployee} />
-            </Group>
-          </AppShell.Header>
-
-          <AppShell.Main>
-            <Tabs
-              defaultValue={location.pathname}
-              onChange={(value) => navigate(`${value === '/' ? '' : value}`)}
-              value={location.pathname}
-              variant="outline"
+          <AppShell header={{ height: 60 }} padding="md">
+            <AppShell.Header
+              display="flex"
+              style={{ alignItems: 'center', justifyContent: 'space-between' }}
+              px={20}
+              c="blue"
             >
-              <Tabs.List>
-                <Tabs.Tab value="/">Заявки</Tabs.Tab>
-                <Tabs.Tab value="/contracts">Договора</Tabs.Tab>
-                <Tabs.Tab value="/receipts">Чеки об оплате</Tabs.Tab>
-                <Tabs.Tab value="/clients">Клиенты</Tabs.Tab>
-                <Tabs.Tab value="/vehicles">ТС</Tabs.Tab>
-                <Tabs.Tab value="/details">Детали</Tabs.Tab>
-                <Tabs.Tab value="/storage">Склад</Tabs.Tab>
-                <Tabs.Tab value="/act">Акты</Tabs.Tab>
-              </Tabs.List>
+              <Group gap={12} align="center">
+                <IconEngine size={40} />
+                <Title order={3}>Auto Repair</Title>
+              </Group>
 
-              <Routes>
-                <Route path="/clients" element={<ClientsPage />} />
-                <Route path="/contracts" element={<ContractsPage />} />
-                <Route path="/receipts" element={<ReceiptsPage />} />
-                <Route path="/vehicles" element={<VehiclesPage />} />
-                <Route path="/details" element={<DetailsPage />} />
-                <Route path="/storage" element={<StoragePage />} />
-                <Route path="/act" element={<ActsPage />} />
-                <Route path="/" element={<AppsPage />} />
-              </Routes>
-            </Tabs>
-          </AppShell.Main>
-        </AppShell>
-      </QueryClientProvider>
+              <Group gap={12} align="center">
+                <IconUserFilled
+                  size={40}
+                  style={{ cursor: 'pointer' }}
+                  onClick={openEmployeeModal}
+                />
+                <IconPlus size={40} style={{ cursor: 'pointer' }} onClick={openAddEmployee} />
+              </Group>
+            </AppShell.Header>
+
+            <AppShell.Main>
+              <Tabs
+                defaultValue={location.pathname}
+                onChange={(value) => navigate(`${value === '/' ? '' : value}`)}
+                value={location.pathname}
+                variant="outline"
+              >
+                <Tabs.List>
+                  <Tabs.Tab value="/">Заявки</Tabs.Tab>
+                  <Tabs.Tab value="/contracts">Договора</Tabs.Tab>
+                  <Tabs.Tab value="/receipts">Чеки об оплате</Tabs.Tab>
+                  <Tabs.Tab value="/clients">Клиенты</Tabs.Tab>
+                  <Tabs.Tab value="/vehicles">ТС</Tabs.Tab>
+                  <Tabs.Tab value="/details">Детали</Tabs.Tab>
+                  <Tabs.Tab value="/storage">Склад</Tabs.Tab>
+                  <Tabs.Tab value="/act">Акты</Tabs.Tab>
+                </Tabs.List>
+
+                <Routes>
+                  <Route path="/clients" element={<ClientsPage />} />
+                  <Route path="/contracts" element={<ContractsPage />} />
+                  <Route path="/receipts" element={<ReceiptsPage />} />
+                  <Route path="/vehicles" element={<VehiclesPage />} />
+                  <Route path="/details" element={<DetailsPage />} />
+                  <Route path="/storage" element={<StoragePage />} />
+                  <Route path="/act" element={<ActsPage />} />
+                  <Route path="/" element={<AppsPage />} />
+                </Routes>
+              </Tabs>
+            </AppShell.Main>
+          </AppShell>
+        </QueryClientProvider>
+      </DatesProvider>
     </MantineProvider>
   );
 }

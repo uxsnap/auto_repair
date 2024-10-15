@@ -10,6 +10,8 @@ type AddAppBody = {
 };
 
 export const addApp = (body: AddAppBody) => {
+  console.log(body)
+
   return client.post<IdBody[]>('/applications', body);
 };
 

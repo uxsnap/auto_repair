@@ -17,6 +17,8 @@ type ReceiptBodyParams struct {
 	ContractName string
 	MinSum       int
 	MaxSum       int
+	MinCreatedAt string
+	MaxCreatedAt string
 }
 
 func (c *CreateReceiptBody) ToEntity() entity.Receipt {

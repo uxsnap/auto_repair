@@ -1,14 +1,14 @@
 import { create } from 'zustand';
-import { ContractsFilters, FilterValues } from '@/types';
+import { ReceiptsFilters, FilterValues } from '@/types';
 
 type Store = {
-  filters: FilterValues<ContractsFilters>;
-  setFilters: (payload: FilterValues<ContractsFilters>) => void;
+  filters: FilterValues<ReceiptsFilters>;
+  setFilters: (payload: FilterValues<ReceiptsFilters>) => void;
 };
 
 export const useFiltersStore = create<Store>()((set) => ({
   filters: {
     name: '',
   },
-  setFilters: (payload: FilterValues<ContractsFilters>) => set(() => ({ filters: payload })),
+  setFilters: (payload: FilterValues<ReceiptsFilters>) => set(() => ({ filters: payload })),
 }));
