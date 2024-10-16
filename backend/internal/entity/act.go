@@ -7,16 +7,16 @@ import (
 type Act struct {
 	Id            pgtype.UUID      `json:"id"`
 	Name          string           `json:"name"`
-	CreatedAt     pgtype.Timestamp `json:"created_at"`
-	ApplicationId pgtype.UUID      `json:"application_id"`
-	ServiceId     pgtype.UUID      `json:"service_id"`
+	CreatedAt     pgtype.Timestamp `json:"createdAt"`
+	ApplicationId pgtype.UUID      `json:"applicationId"`
+	ServiceId     pgtype.UUID      `json:"serviceId"`
 	IsDeleted     bool
 }
 
 type ActWithData struct {
 	Id          pgtype.UUID      `json:"id"`
 	Name        string           `json:"name"`
-	CreatedAt   pgtype.Timestamp `json:"created_at"`
+	CreatedAt   pgtype.Timestamp `json:"createdAt"`
 	Application IdWithName       `json:"application"`
 	Service     IdWithName       `json:"service"`
 }

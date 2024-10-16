@@ -32,11 +32,17 @@ func (h *Handler) getAllActs(w http.ResponseWriter, r *http.Request) {
 		params.ServiceName = phone
 	}
 
-	// passport := query.Get("serviceName")
+	minCreatedAt := query.Get("minCreatedAt")
 
-	// if passport != "" {
-	// 	params.Passport = passport
-	// }
+	if minCreatedAt != "" {
+		params.MinCreatedAt = minCreatedAt
+	}
+
+	maxCreatedAt := query.Get("maxCreatedAt")
+
+	if maxCreatedAt != "" {
+		params.MaxCreatedAt = maxCreatedAt
+	}
 
 	Act, err := h.actsService.GetAll(context.Background(), params)
 

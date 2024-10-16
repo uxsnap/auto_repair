@@ -129,6 +129,8 @@ export type ActFilters = {
   applicationName: string;
   serviceName: string;
   createdAt: Date;
+  minCreatedAt: Date | null;
+  maxCreatedAt: Date | null;
 };
 
 export type ApplicationFilters = {
@@ -138,6 +140,8 @@ export type ApplicationFilters = {
   contractName: string;
   status: string;
   createdAt: Date;
+  minCreatedAt: Date | null;
+  maxCreatedAt: Date | null;
 };
 
 export type ContractsFilters = {

@@ -52,10 +52,6 @@ func (cs *VehiclesService) Create(ctx context.Context, clientData body.CreateVeh
 		return uuid.Nil, fmt.Errorf("длина номера должна быть равна 10 символов")
 	}
 
-	if !validators.IsValidPass(clientData.VehicleNumber) {
-		return uuid.Nil, fmt.Errorf("неверный формат паспорта")
-	}
-
 	return cs.repo.Create(ctx, clientData.ToEntity())
 }
 

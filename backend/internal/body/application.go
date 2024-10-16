@@ -22,7 +22,8 @@ type ApplicationBodyParams struct {
 	EmployeeName string
 	ContractName string
 	Status       string
-	// CreatedAt  time.Time
+	MinCreatedAt string
+	MaxCreatedAt string
 }
 
 func (c *CreateApplicationBody) ToEntity() entity.Application {

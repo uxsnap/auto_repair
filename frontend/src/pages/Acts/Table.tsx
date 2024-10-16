@@ -8,6 +8,7 @@ import { getActs } from '@/api/acts/getActs';
 import { Container } from '@/components/Container';
 import { Act, ActWithData } from '@/types';
 import { useFiltersStore } from './store';
+import dayjs from 'dayjs';
 
 type Props = {
   onChange: (client: Act) => void;
@@ -47,7 +48,7 @@ export const ActTable = ({ onChange }: Props) => {
       <Table.Td>{element.name}</Table.Td>
       <Table.Td>{element.application.name}</Table.Td>
       <Table.Td>{element.service.name}</Table.Td>
-      <Table.Td>{element.createdAt}</Table.Td>
+      <Table.Td>{dayjs(element.createdAt.Time).format('DD.MM.YYYY')}</Table.Td>
 
       <Table.Td>
         <IconX color="red" style={{ cursor: 'pointer' }} onClick={() => onDelete(element.id)} />

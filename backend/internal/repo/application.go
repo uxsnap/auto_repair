@@ -53,6 +53,14 @@ func (cr *ApplicationsRepository) GetAll(ctx context.Context, params body.Applic
 		preSql = preSql.Where(sq.Like{"LOWER(apps.status)": strings.ToLower("%" + params.Status + "%")})
 	}
 
+	if params.MinCreatedAt != "" {
+		preSql = preSql.Where(sq.GtOrEq{"apps.created_at": params.MinCreatedAt})
+	}
+
+	if params.MaxCreatedAt != "" {
+		preSql = preSql.Where(sq.LtOrEq{"apps.created_at": params.MaxCreatedAt})
+	}
+
 	sql, args, err := preSql.ToSql()
 
 	if err != nil {

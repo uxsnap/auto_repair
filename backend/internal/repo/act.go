@@ -44,6 +44,14 @@ func (cr *ActsRepository) GetAll(ctx context.Context, params body.ActBodyParams)
 		preSql = preSql.Where(sq.Like{"LOWER(s.name)": strings.ToLower("%" + params.ServiceName + "%")})
 	}
 
+	if params.MinCreatedAt != "" {
+		preSql = preSql.Where(sq.GtOrEq{"act.created_at": params.MinCreatedAt})
+	}
+
+	if params.MaxCreatedAt != "" {
+		preSql = preSql.Where(sq.LtOrEq{"act.created_at": params.MaxCreatedAt})
+	}
+
 	sql, args, err := preSql.ToSql()
 
 	if err != nil {
@@ -92,7 +100,7 @@ func (cr *ActsRepository) Create(ctx context.Context, client entity.Act) (uuid.U
 		Insert(cr.Prefix).Columns(
 		"id", "name", "application_id", "created_at", "service_id", "is_deleted",
 	).PlaceholderFormat(sq.Dollar).
-		Values(client.Id, client.Name, client.ApplicationId, client.CreatedAt, client.ServiceId, false).
+		Values(client.Id, client.Name, client.ApplicationId, client.CreatedAt.Time, client.ServiceId, false).
 		ToSql()
 
 	if err != nil {

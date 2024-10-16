@@ -4,6 +4,7 @@ import { Button, Group, Modal, NumberInput, Select, Stack, TextInput } from '@ma
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { addDetail } from '@/api/details/addDetail';
+import { getDetails } from '@/api/details/getDetails';
 
 type Props = {
   opened: boolean;
@@ -33,10 +34,10 @@ export const DetailsModal = ({ opened, close }: Props) => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [addDetail.queryKey] });
+      queryClient.invalidateQueries({ queryKey: [getDetails.queryKey] });
       showNotification({
         title: 'Детали',
-        message: `Деталь "${form.values.name}" была добавлена`,
+        message: `Деталь "${form.getValues().name}" была добавлена`,
       });
       close();
     },

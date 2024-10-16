@@ -14,6 +14,7 @@ type CreateVehicleBody struct {
 }
 
 type VehicleBodyParams struct {
+	ClientName    string
 	VehicleNumber string
 	Brand         string
 	Model         string

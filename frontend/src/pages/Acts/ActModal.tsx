@@ -41,7 +41,7 @@ export const ActModal = ({ opened, close, act, onSubmit }: Props) => {
 
   const { data: appsData } = useQuery({
     queryKey: [getApps.queryKey],
-    queryFn: () => getEmployees(),
+    queryFn: () => getApps(),
     select(data) {
       return data.data.map((appsData) => ({
         value: appsData.id,
@@ -98,7 +98,7 @@ export const ActModal = ({ opened, close, act, onSubmit }: Props) => {
   });
 
   return (
-    <Modal opened={opened} onClose={close} title={'Добавить деталь'} centered>
+    <Modal opened={opened} onClose={close} title={'Добавить Акт'} centered>
       <form onSubmit={handleSubmit}>
         <Stack gap={12}>
           <TextInput

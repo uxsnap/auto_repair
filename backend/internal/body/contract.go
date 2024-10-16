@@ -1,7 +1,6 @@
 package body
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -27,8 +26,6 @@ type ContractBodyParams struct {
 }
 
 func (c *CreateContractBody) ToEntity() entity.Contract {
-	fmt.Println(utils.TruncTime(c.SignedAt))
-
 	return entity.Contract{
 		Id: pgtype.UUID{
 			Bytes:  uuid.New(),

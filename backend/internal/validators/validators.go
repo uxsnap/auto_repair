@@ -3,6 +3,7 @@ package validators
 import (
 	"regexp"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/google/uuid"
 )
@@ -28,7 +29,7 @@ func IsValidLen(name string, l int) bool {
 }
 
 func IsValidLenEq(val string, l int) bool {
-	return len(val) == l
+	return utf8.RuneCountInString(val) == l
 }
 
 func IsValidGuid(guid uuid.UUID) bool {

@@ -45,6 +45,18 @@ func (h *Handler) getAllApplications(w http.ResponseWriter, r *http.Request) {
 		params.Status = status
 	}
 
+	minCreatedAt := query.Get("minCreatedAt")
+
+	if minCreatedAt != "" {
+		params.MinCreatedAt = minCreatedAt
+	}
+
+	maxCreatedAt := query.Get("maxCreatedAt")
+
+	if maxCreatedAt != "" {
+		params.MaxCreatedAt = maxCreatedAt
+	}
+
 	applications, err := h.applicationsService.GetAll(context.Background(), params)
 
 	if err != nil {

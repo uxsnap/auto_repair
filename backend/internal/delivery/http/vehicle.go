@@ -14,6 +14,12 @@ func (h *Handler) getAllVehicles(w http.ResponseWriter, r *http.Request) {
 
 	query := r.URL.Query()
 
+	clientName := query.Get("clientName")
+
+	if clientName != "" {
+		params.ClientName = clientName
+	}
+
 	vehicleNumber := query.Get("vehicleNumber")
 
 	if vehicleNumber != "" {

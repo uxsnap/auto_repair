@@ -31,6 +31,10 @@ func (cr *VehiclesRepository) GetAll(ctx context.Context, params body.VehicleBod
 		Join("clients c on c.id = v.client_id").
 		Where("v.is_deleted = false")
 
+	if params.ClientName != "" {
+		preSql = preSql.Where(sq.Like{"LOWER(c.name)": strings.ToLower("%" + params.ClientName + "%")})
+	}
+
 	if params.VehicleNumber != "" {
 		preSql = preSql.Where(sq.Like{"LOWER(v.vehicle_number)": strings.ToLower("%" + params.VehicleNumber + "%")})
 	}

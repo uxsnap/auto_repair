@@ -30,10 +30,21 @@ export const Filters = () => {
       />
 
       <DateInput
-        onChange={(v) => onChange({ ...filters, createdAt: v ?? undefined })}
-        label="Дата создания"
-        placeholder="Выберите дату создания"
-        value={filters.createdAt}
+        clearable
+        onChange={(v) => onChange({ ...filters, minCreatedAt: v })}
+        label="Минимальная дата создания"
+        placeholder="Выберите минимальная дату создания"
+        value={filters.minCreatedAt}
+        valueFormat="DD.MM.YYYY"
+      />
+
+      <DateInput
+        clearable
+        onChange={(v) => onChange({ ...filters, maxCreatedAt: v })}
+        label="Максимальная дата создания"
+        placeholder="Выберите максимальную дату создания"
+        value={filters.maxCreatedAt}
+        valueFormat="DD.MM.YYYY"
       />
     </Group>
   );
