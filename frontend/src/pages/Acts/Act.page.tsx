@@ -2,19 +2,14 @@ import { useState } from 'react';
 import { Button, Group, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Act } from '@/types';
-import { Filters } from './Filters';
 import { ActModal } from './ActModal';
+import { Filters } from './Filters';
 import { ActTable } from './Table';
 
 export function ActsPage() {
   const [opened, { open, close }] = useDisclosure(false);
 
   const [curAct, setCurAct] = useState<Act>();
-
-  const handleChange = (Act: Act) => {
-    setCurAct(Act);
-    open();
-  };
 
   return (
     <>
@@ -33,7 +28,7 @@ export function ActsPage() {
           <Button onClick={open}>Добавить акт</Button>
         </Group>
 
-        <ActTable onChange={handleChange} />
+        <ActTable />
       </Stack>
     </>
   );

@@ -1,4 +1,5 @@
-import { IconEdit, IconX } from '@tabler/icons-react';
+import dayjs from 'dayjs';
+import { IconX } from '@tabler/icons-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Table } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
@@ -6,15 +7,9 @@ import { showNotification } from '@mantine/notifications';
 import { deleteAct } from '@/api/acts/deleteAct';
 import { getActs } from '@/api/acts/getActs';
 import { Container } from '@/components/Container';
-import { Act, ActWithData } from '@/types';
 import { useFiltersStore } from './store';
-import dayjs from 'dayjs';
 
-type Props = {
-  onChange: (client: Act) => void;
-};
-
-export const ActTable = ({ onChange }: Props) => {
+export const ActTable = () => {
   const filters = useFiltersStore((state) => state.filters);
   const [debouncedFilters] = useDebouncedValue(filters, 200);
 
@@ -31,8 +26,8 @@ export const ActTable = ({ onChange }: Props) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [getActs.queryKey] });
       showNotification({
-        title: 'Клиент',
-        message: `Клиент был удален.`,
+        title: 'Акт',
+        message: `Акт был удален.`,
       });
       close();
     },

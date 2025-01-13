@@ -78,7 +78,7 @@ export const AppTable = ({ onChange }: Props) => {
           <Table.Tr>
             <Table.Th>ID записи</Table.Th>
             <Table.Th>Имя</Table.Th>
-            <Table.Th>Имя отвественного сотрудника</Table.Th>
+            <Table.Th>Имя ответственного сотрудника</Table.Th>
             <Table.Th>Имя клиента</Table.Th>
             <Table.Th>Контракт</Table.Th>
             <Table.Th>Дата создания</Table.Th>

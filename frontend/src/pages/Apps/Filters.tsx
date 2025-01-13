@@ -25,7 +25,7 @@ export const Filters = () => {
       <TextInput
         onChange={(e) => onChange({ ...filters, employeeName: e.target.value.trim() })}
         label="Имя сотрудника"
-        placeholder="Введите имя отвественного сотрудника"
+        placeholder="Введите имя ответственного сотрудника"
         value={filters.employeeName}
       />
 

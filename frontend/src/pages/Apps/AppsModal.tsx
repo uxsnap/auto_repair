@@ -7,10 +7,10 @@ import { showNotification } from '@mantine/notifications';
 import { addApp } from '@/api/apps/addApp';
 import { editApp } from '@/api/apps/editApp';
 import { getApps } from '@/api/apps/getApps';
-import { getEmployees } from '@/api/employees/getEmployees';
-import { Application } from '@/types';
 import { getClients } from '@/api/clients/getClients';
 import { getContracts } from '@/api/contract/getContacts';
+import { getEmployees } from '@/api/employees/getEmployees';
+import { Application } from '@/types';
 
 type Props = {
   opened: boolean;
@@ -30,7 +30,7 @@ export const AppModal = ({ edit = false, opened, close, app, onSubmit }: Props) 
       employeeId: app?.employeeId ?? '',
       clientId: app?.clientId ?? '',
       createdAt: app?.createdAt ?? '',
-      status: app?.status ?? 'Новый',
+      status: app?.status ?? 'В процессе',
       contractId: app?.contractId ?? '',
     },
   });
@@ -92,8 +92,8 @@ export const AppModal = ({ edit = false, opened, close, app, onSubmit }: Props) 
       queryApp.invalidateQueries({ queryKey: [getApps.queryKey] });
 
       showNotification({
-        title: 'Контракт',
-        message: `Контракт "${form.getValues().name}" был добавлен`,
+        title: 'Заявка',
+        message: `Заявка "${form.getValues().name}" была добавлена`,
       });
 
       form.reset();
@@ -116,8 +116,8 @@ export const AppModal = ({ edit = false, opened, close, app, onSubmit }: Props) 
       queryApp.invalidateQueries({ queryKey: [getApps.queryKey] });
 
       showNotification({
-        title: 'Контракт',
-        message: `Контракт "${form.getValues().name}" был обновлен`,
+        title: 'Заявка',
+        message: `Заявка "${form.getValues().name}" была обновлена`,
       });
 
       form.reset();
@@ -144,7 +144,12 @@ export const AppModal = ({ edit = false, opened, close, app, onSubmit }: Props) 
   });
 
   return (
-    <Modal opened={opened} onClose={close} title={edit ? 'Редактировать заявку' : 'Добавить заявку'} centered>
+    <Modal
+      opened={opened}
+      onClose={close}
+      title={edit ? 'Редактировать заявку' : 'Добавить заявку'}
+      centered
+    >
       <form onSubmit={handleSubmit}>
         <Stack gap={12}>
           <TextInput
@@ -157,8 +162,8 @@ export const AppModal = ({ edit = false, opened, close, app, onSubmit }: Props) 
 
           <Select
             withAsterisk
-            label="Отвественный сотрудник"
-            placeholder="Выберите отвественного сотрудника"
+            label="Ответственный сотрудник"
+            placeholder="Выберите ответственного сотрудника"
             data={employeesData}
             key={form.key('employeeId')}
             {...form.getInputProps('employeeId')}
@@ -186,11 +191,7 @@ export const AppModal = ({ edit = false, opened, close, app, onSubmit }: Props) 
             withAsterisk
             label="Статус"
             placeholder="Выберите статус"
-            data={[
-              'Новый',
-              'В работе',
-              'Закрыт',
-            ]}
+            data={['Завершена', 'Отменена', 'В процессе']}
             key={form.key('status')}
             {...form.getInputProps('status')}
           />

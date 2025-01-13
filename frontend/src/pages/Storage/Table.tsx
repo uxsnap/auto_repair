@@ -73,7 +73,7 @@ export const StorageTable = ({ onChange }: Props) => {
           <Table.Tr>
             <Table.Th>ID записи</Table.Th>
             <Table.Th>Номер склада</Table.Th>
-            <Table.Th>Имя отвественного сотрудника</Table.Th>
+            <Table.Th>Имя ответственного сотрудника</Table.Th>
             <Table.Th>Наименование запчасти</Table.Th>
             <Table.Th>Кол-во деталей</Table.Th>
             <Table.Th>Действия</Table.Th>

@@ -117,7 +117,12 @@ export const ClientModal = ({ edit = false, opened, close, client, onSubmit }: P
   });
 
   return (
-    <Modal opened={opened} onClose={close} title={edit ? 'Редактировать клиента' : 'Добавить клиента'} centered>
+    <Modal
+      opened={opened}
+      onClose={close}
+      title={edit ? 'Редактировать клиента' : 'Добавить клиента'}
+      centered
+    >
       <form onSubmit={handleSubmit}>
         <Stack gap={12}>
           <TextInput
@@ -130,8 +135,8 @@ export const ClientModal = ({ edit = false, opened, close, client, onSubmit }: P
 
           <Select
             withAsterisk
-            label="Отвественный сотрудник"
-            placeholder="Выберите отвественного сотрудника"
+            label="Ответственный сотрудник"
+            placeholder="Выберите ответственного сотрудника"
             data={employeesData}
             key={form.key('employeeId')}
             {...form.getInputProps('employeeId')}

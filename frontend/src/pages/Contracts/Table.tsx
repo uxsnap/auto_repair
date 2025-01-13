@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { IconEdit, IconX } from '@tabler/icons-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Table } from '@mantine/core';
@@ -8,7 +9,6 @@ import { getContracts } from '@/api/contract/getContacts';
 import { Container } from '@/components/Container';
 import { Contract } from '@/types';
 import { useFiltersStore } from './store';
-import dayjs from 'dayjs';
 
 type Props = {
   onChange: (client: Contract) => void;
@@ -31,8 +31,8 @@ export const ContractTable = ({ onChange }: Props) => {
     onSuccess: () => {
       queryContract.invalidateQueries({ queryKey: [getContracts.queryKey] });
       showNotification({
-        title: 'Контракт',
-        message: `Контракт был удален.`,
+        title: 'Договор',
+        message: `Договор был удален.`,
       });
       close();
     },
@@ -47,8 +47,10 @@ export const ContractTable = ({ onChange }: Props) => {
       <Table.Td>{element.id}</Table.Td>
       <Table.Td>{element.name}</Table.Td>
       <Table.Td>{element.sum}</Table.Td>
-      <Table.Td>{ dayjs(element.createdAt.Time).format('DD.MM.YYYY')}</Table.Td>
-      <Table.Td>{element.signedAt.Status === 1 ? '' : dayjs(element.signedAt.Time).format('DD.MM.YYYY')}</Table.Td>
+      <Table.Td>{dayjs(element.createdAt.Time).format('DD.MM.YYYY')}</Table.Td>
+      <Table.Td>
+        {element.signedAt.Status === 1 ? '' : dayjs(element.signedAt.Time).format('DD.MM.YYYY')}
+      </Table.Td>
       <Table.Td>{element.status}</Table.Td>
 
       <Table.Td>

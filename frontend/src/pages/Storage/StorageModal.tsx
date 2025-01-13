@@ -138,8 +138,8 @@ export const StorageModal = ({ edit = false, opened, close, storage, onSubmit }:
 
           <Select
             withAsterisk
-            label="Отвественный сотрудник"
-            placeholder="Выберите отвественного сотрудника"
+            label="Ответственный сотрудник"
+            placeholder="Выберите ответственного сотрудника"
             data={employeesData}
             key={form.key('employeeId')}
             {...form.getInputProps('employeeId')}

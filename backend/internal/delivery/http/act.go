@@ -20,10 +20,16 @@ func (h *Handler) getAllActs(w http.ResponseWriter, r *http.Request) {
 		params.Name = name
 	}
 
-	employeeName := query.Get("applicationName")
+	applicationName := query.Get("applicationName")
 
-	if employeeName != "" {
-		params.ApplicationName = employeeName
+	if applicationName != "" {
+		params.ApplicationName = applicationName
+	}
+
+	serviceName := query.Get("serviceName")
+
+	if serviceName != "" {
+		params.ServiceName = serviceName
 	}
 
 	phone := query.Get("phone")

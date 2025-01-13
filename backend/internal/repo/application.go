@@ -34,7 +34,7 @@ func (cr *ApplicationsRepository) GetAll(ctx context.Context, params body.Applic
 		Where("apps.is_deleted = false")
 
 	if params.Name != "" {
-		preSql = preSql.Where(sq.Like{"LOWER(c.name)": strings.ToLower("%" + params.Name + "%")})
+		preSql = preSql.Where(sq.Like{"LOWER(apps.name)": strings.ToLower("%" + params.Name + "%")})
 	}
 
 	if params.EmployeeName != "" {

@@ -33,7 +33,7 @@ func (cr *ActsRepository) GetAll(ctx context.Context, params body.ActBodyParams)
 		Where("act.is_deleted = false")
 
 	if params.Name != "" {
-		preSql = preSql.Where(sq.Like{"LOWER(c.name)": strings.ToLower("%" + params.Name + "%")})
+		preSql = preSql.Where(sq.Like{"LOWER(act.name)": strings.ToLower("%" + params.Name + "%")})
 	}
 
 	if params.ApplicationName != "" {

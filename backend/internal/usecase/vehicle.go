@@ -48,8 +48,8 @@ func (cs *VehiclesService) Create(ctx context.Context, clientData body.CreateVeh
 		return uuid.Nil, fmt.Errorf("длина модели должна быть больше 3 символов")
 	}
 
-	if !validators.IsValidLenEq(clientData.VehicleNumber, 10) {
-		return uuid.Nil, fmt.Errorf("длина номера должна быть равна 10 символов")
+	if !validators.IsValidLenEq(clientData.VehicleNumber, 8) {
+		return uuid.Nil, fmt.Errorf("длина номера должна быть равна 8 символам")
 	}
 
 	return cs.repo.Create(ctx, clientData.ToEntity())

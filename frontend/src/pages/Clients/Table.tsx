@@ -75,7 +75,7 @@ export const ClientTable = ({ onChange }: Props) => {
           <Table.Tr>
             <Table.Th>ID записи</Table.Th>
             <Table.Th>Имя</Table.Th>
-            <Table.Th>Имя отвественного сотрудника</Table.Th>
+            <Table.Th>Имя ответственного сотрудника</Table.Th>
             <Table.Th>Телефон</Table.Th>
             <Table.Th>Паспорт</Table.Th>
             <Table.Th>Наличие документов</Table.Th>

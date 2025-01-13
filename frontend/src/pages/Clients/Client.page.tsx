@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Group, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Client } from '@/types';
-import { Filters } from './Filters';
 import { ClientModal } from './ClientModal';
+import { Filters } from './Filters';
 import { ClientTable } from './Table';
 
 export function ClientsPage() {

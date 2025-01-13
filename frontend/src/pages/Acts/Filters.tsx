@@ -10,8 +10,8 @@ export const Filters = () => {
     <Group gap={12}>
       <TextInput
         onChange={(e) => onChange({ ...filters, name: e.target.value.trim() })}
-        label="Имя клиента"
-        placeholder="Введите номер склада"
+        label="Имя"
+        placeholder="Введите имя акта"
         value={filters.name}
       />
 

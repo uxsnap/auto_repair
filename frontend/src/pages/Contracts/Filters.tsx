@@ -10,8 +10,8 @@ export const Filters = () => {
     <Group gap={12}>
       <TextInput
         onChange={(e) => onChange({ ...filters, name: e.target.value })}
-        label="Имя клиента"
-        placeholder="Введите номер склада"
+        label="Имя"
+        placeholder="Введите имя"
         value={filters.name}
       />
 
@@ -36,10 +36,10 @@ export const Filters = () => {
       />
 
       <Select
-        onChange={(v) => onChange({ ...filters, status: v + '' })}
+        onChange={(v) => onChange({ ...filters, status: v?.toString() })}
         label="Статус"
         placeholder="Выберите статус"
-        data={['Новый', 'Действующий', 'Закрыт']}
+        data={['В обработке', 'Подписан', 'Завершён', 'Черновик']}
         value={filters.status}
       />
 

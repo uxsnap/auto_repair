@@ -23,13 +23,11 @@ const getInitValues = (contract?: Contract) => ({
   name: contract?.name ?? '',
   sum: contract?.sum ?? 0,
   signedAt: contract ? new Date(contract.signedAt.Time) : '',
-  status: contract?.status ?? 'Новый',
+  status: contract?.status ?? 'В обработке',
 });
 
 export const ContractModal = ({ edit = false, opened, close, contract, onSubmit }: Props) => {
   const queryContract = useQueryClient();
-
-  console.log(getInitValues(contract));
 
   const form = useForm({
     mode: 'uncontrolled',
@@ -142,6 +140,7 @@ export const ContractModal = ({ edit = false, opened, close, contract, onSubmit 
             placeholder="Выберите дату подписания"
             valueFormat="DD.MM.YYYY"
             lang="ru"
+            clearable
             key={form.key('signedAt')}
             {...form.getInputProps('signedAt')}
           />
@@ -150,7 +149,7 @@ export const ContractModal = ({ edit = false, opened, close, contract, onSubmit 
             withAsterisk
             label="Статус"
             placeholder="Выберите статус"
-            data={['Новый', 'Действующий', 'Закрыт']}
+            data={['В обработке', 'Подписан', 'Завершён', 'Черновик']}
             key={form.key('status')}
             {...form.getInputProps('status')}
           />

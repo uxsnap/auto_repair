@@ -36,11 +36,11 @@ func (cr *ReceiptsRepository) GetAll(ctx context.Context, params body.ReceiptBod
 	}
 
 	if params.MinSum != 0 {
-		preSql = preSql.Where(sq.GtOrEq{"price": params.MinSum})
+		preSql = preSql.Where(sq.GtOrEq{"r.sum": params.MinSum})
 	}
 
 	if params.MaxSum != 0 {
-		preSql = preSql.Where(sq.LtOrEq{"price": params.MaxSum})
+		preSql = preSql.Where(sq.LtOrEq{"r.sum": params.MaxSum})
 	}
 
 	if params.MinCreatedAt != "" {
